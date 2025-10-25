@@ -9,6 +9,7 @@ namespace Cliente.Domain.Models
 {
     public class Client: BaseEntities
     {
+        
         public Client(string nomeCliente, string numeroDocumento, string endereco, int numero, string complemento, string cidade, Estados estado)
         {
             NomeCliente = nomeCliente;

@@ -8,9 +8,21 @@ namespace Cliente.Domain.Models
 {
     public class BaseEntities
     {
+        public BaseEntities()
+        {
+            CreatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.UtcNow;
+            IsActive = false;
+        }
+
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsActive { get; set; }
+
+        public void SetAsDeleted() 
+        { 
+            IsActive = true; 
+        }
     }
 }

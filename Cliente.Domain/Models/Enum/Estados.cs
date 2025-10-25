@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,32 +9,59 @@ namespace Cliente.Domain.Models.Enum
 {
     public enum Estados
     {
-        AC, 
+        [Description("Acre")]
+        AC,
+        [Description("Alagoas")]
         AL,
+        [Description("Amapá")]
         AP,
-        AM, 
-        BA, 
-        CE, 
-        DF, 
-        ES, 
+        [Description("Amkazonas")]
+        AM,
+        [Description("Bahia")]
+        BA,
+        [Description("Ceará")]
+        CE,
+        [Description("Distrito Federal")]
+        DF,
+        [Description("Espirito Santo")]
+        ES,
+        [Description("Goías")]
         GO,
-        MA, 
-        MT, 
-        MS, 
-        MG, 
-        PA, 
+        [Description("Maranhão")]
+        MA,
+        [Description("Mato Grosso")]
+        MT,
+        [Description("Mato Grosso do Sul")]
+        MS,
+        [Description("Minas Gerais")]
+        MG,
+        [Description("Pará")]
+        PA,
+        [Description("Paraiba")]
         PB,
-        PR, 
-        PE, 
+        [Description("Paraná")]
+        PR,
+        [Description("Pernambuco")]
+        PE,
+        [Description("Piauí")]
         PI,
-        RJ, 
-        RN, 
-        RS, 
-        RO, 
-        RR, 
-        SC, 
-        SP, 
+        [Description("Rio de Janeiro")]
+        RJ,
+        [Description("Rio Grande do Norte")]
+        RN,
+        [Description("Rio Grande do Sul")]
+        RS,
+        [Description("Rondônia")]
+        RO,
+        [Description("Rorraíma")]
+        RR,
+        [Description("Santa Catarina")]
+        SC,
+        [Description("São Paulo")]
+        SP,
+        [Description("Sergipe")]
         SE,
+        [Description("Tocatins")]
         TO
     }
 }
