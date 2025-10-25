@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +17,13 @@ namespace Cliente.Domain.Models
             ValorUnitario = valorUnitario;
             PedidoId = pedidoId;
         }
-
+        [Description("Nome do Produto")]
         public string NomeProduto { get; set; }
+        [Description("Quantidade")]
         public int Quantidade { get; set; }
+        [Description("Valor Unitário")]
         public decimal ValorUnitario { get; set; }
+        [Description("Numero do Pedido")]
         public int PedidoId { get; set; }
         public Pedido Pedido { get; set; }
 

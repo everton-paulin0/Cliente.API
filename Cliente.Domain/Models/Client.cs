@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,13 +21,19 @@ namespace Cliente.Domain.Models
             Cidade = cidade;
             Estado = estado;
         }
-
+        [Description("Nome do Cliente")]
         public string NomeCliente { get; set; }
+        [Description("Documento do Cliente")]
         public string NumeroDocumento { get; set; }
+        [Description("Endereço")]
         public string Endereco { get; set; }
+        [Description("Numero")]
         public int Numero { get; set; }
+        [Description("Complemento")]
         public string Complemento { get; set; }
+        [Description("Cidade")]
         public string Cidade { get; set; }
+        [Description("Estado")]
         public Estados Estado { get; set; }
     }
 }
