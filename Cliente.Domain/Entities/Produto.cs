@@ -10,7 +10,7 @@ namespace Cliente.Domain.Models
     public class Produto : BaseEntities
     {
        
-        public Produto(string nomeProduto, int quantidade, decimal valorUnitario, int pedidoId)
+        public Produto(string nomeProduto, int quantidade, decimal valorUnitario, int pedidoId) : base()
         {
             NomeProduto = nomeProduto;
             Quantidade = quantidade;

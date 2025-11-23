@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cliente.Application.Model;
+﻿using Cliente.Application.Model;
 using Cliente.Infrastructure;
 
 namespace Cliente.Application.Services
@@ -16,44 +11,80 @@ namespace Cliente.Application.Services
             _context = context;
 
         }
-        public ResultViewModel Cancel(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResultViewModel Complete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public ResultViewModel Delete(int id)
         {
-            throw new NotImplementedException();
+            var client = _context.Clientes.SingleOrDefault(c => c.Id == id);
+
+            if (client == null)
+            {
+                return ResultViewModel<ClientViewModel>.Error("Cliente Não Encontrado");
+            }
+
+            client.SetAsDeleted();
+            _context.Clientes.Update(client);
+            _context.SaveChanges();
+
+            return ResultViewModel.Success();
         }
 
         public ResultViewModel<List<ClientItemViemModel>> GetAll(string search = "")
         {
-            throw new NotImplementedException();
+            var clients = _context.Clientes.Where(c => !c.IsActive).ToList();
+
+            var model = clients.Select(ClientItemViemModel.FromEntityClient).ToList();
+
+            return ResultViewModel<List<ClientItemViemModel>>.Success(model);
         }
 
         public ResultViewModel<ClientViewModel> GetById(int id)
         {
-            throw new NotImplementedException();
+            var client = _context.Clientes.SingleOrDefault(c => c.Id == id && c.IsActive);
+
+            if (client == null)
+                return ResultViewModel<ClientViewModel>.Error("Cliente não encontrado");
+
+            var model = ClientViewModel.FromEntity(client);
+
+            return ResultViewModel<ClientViewModel>.Success(model);
         }
 
         public ResultViewModel<int> Insert(CreateClientInputModel model)
         {
-            throw new NotImplementedException();
-        }
+            var client = model.ToEntityClient();
 
-        public ResultViewModel SetPaymentPending(int id)
-        {
-            throw new NotImplementedException();
+            _context.Clientes.Add(client);
+            _context.SaveChanges();
+
+            return ResultViewModel<int>.Success(client.Id);
         }
 
         public ResultViewModel Update(UpdateClientInputModel model)
         {
-            throw new NotImplementedException();
+            var client = _context.Clientes.SingleOrDefault(c => c.Id == model.IdCliente);
+
+            if (client == null)
+            {
+                return ResultViewModel.Error("Cliente Não Encontrado");
+            }
+
+            client.Update(model.NomeCliente, model.NumeroDocumento, model.Endereco, model.Numero, model.Complemento, model.Cidade, model.Estado);
+
+            _context.Clientes.Update(client);
+
+            _context.SaveChanges();
+
+            return ResultViewModel.Success();
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+

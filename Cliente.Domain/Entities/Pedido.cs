@@ -12,7 +12,7 @@ namespace Cliente.Domain.Models
 {
     public class Pedido :BaseEntities
     {
-        public Pedido(int clientId, int vendedorId,  Status statusVenda)
+        public Pedido(int clientId, int vendedorId,  Status statusVenda) : base()
         {
             ClientId = clientId;            
             VendedorId = vendedorId;            

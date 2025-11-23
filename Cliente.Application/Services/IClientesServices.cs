@@ -14,8 +14,6 @@ namespace Cliente.Application.Services
         ResultViewModel<int> Insert(CreateClientInputModel model);
         ResultViewModel Update(UpdateClientInputModel model);
         ResultViewModel Delete(int id);
-        ResultViewModel Complete(int id);
-        ResultViewModel Cancel(int id);
-        ResultViewModel SetPaymentPending(int id);
+        
     }
 }

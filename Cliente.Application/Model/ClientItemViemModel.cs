@@ -32,7 +32,7 @@ namespace Cliente.Application.Model
         public string Cidade { get; set; }
         public string Estado { get; set; }
 
-        public static ClientItemViemModel FromEntityOrder(Client cliente)
+        public static ClientItemViemModel FromEntityClient(Client cliente)
             => new ClientItemViemModel(cliente.Id, cliente.NomeCliente, cliente.NumeroDocumento, cliente.Endereco, cliente.Numero , cliente.Complemento, cliente.Cidade, cliente.Estado.ToString());
     }
 }

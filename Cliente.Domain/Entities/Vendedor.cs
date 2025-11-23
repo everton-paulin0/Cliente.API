@@ -10,7 +10,7 @@ namespace Cliente.Domain.Models
 {
     public class Vendedor : BaseEntities
     {
-        public Vendedor(string nomeVendedor, NumeroVendedor numero)
+        public Vendedor(string nomeVendedor, NumeroVendedor numero) : base()
         {
             NomeVendedor = nomeVendedor;
             Numero = numero;

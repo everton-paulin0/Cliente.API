@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cliente.Domain.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Cliente.Application.Model
 {
@@ -28,5 +30,8 @@ namespace Cliente.Application.Model
         public string Complemento { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+
+        public static ClientViewModel FromEntity(Client entity)
+            => new(entity.Id, entity.NomeCliente, entity.NumeroDocumento, entity.Endereco, entity.Numero, entity.Complemento, entity.Cidade, entity.Estado.ToString());
     }
 }

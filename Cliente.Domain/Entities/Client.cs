@@ -11,7 +11,7 @@ namespace Cliente.Domain.Models
     public class Client: BaseEntities
     {
         
-        public Client(string nomeCliente, string numeroDocumento, string endereco, int numero, string complemento, string cidade, Estados estado)
+        public Client(string nomeCliente, string numeroDocumento, string endereco, int numero, string complemento, string cidade, Estados estado):base()
         {
             NomeCliente = nomeCliente;
             NumeroDocumento = numeroDocumento;
@@ -35,5 +35,20 @@ namespace Cliente.Domain.Models
         public string Cidade { get; set; }
         [Description("Estado")]
         public Estados Estado { get; set; }
-    }
+
+        public void Update(string nomeCliente, string numeroDocumento, string endereco, int numero, string complemento, string cidade, Estados estado)
+        {
+            NomeCliente = nomeCliente;
+            NumeroDocumento = numeroDocumento;
+            Endereco = endereco;
+            Numero = numero;
+            Complemento = complemento;
+            Cidade = cidade;
+            Estado = estado;
+
+            UpdatedAt = DateTime.UtcNow; 
+        }
+
+        
+    }    
 }
