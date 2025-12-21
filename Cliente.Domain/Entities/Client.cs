@@ -35,6 +35,7 @@ namespace Cliente.Domain.Models
         public string Cidade { get; set; }
         [Description("Estado")]
         public Estados Estado { get; set; }
+        public List<Pedido> Pedidos { get; set; }
 
         public void Update(string nomeCliente, string numeroDocumento, string endereco, int numero, string complemento, string cidade, Estados estado)
         {

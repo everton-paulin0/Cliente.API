@@ -20,6 +20,8 @@ namespace Cliente.Domain.Models
         [Description("Numero do Vendedor")]
         public NumeroVendedor Numero { get; set; }
 
+        public List<Pedido> Pedidos { get; set; }
+
         public decimal CalcularComissao(decimal totalVendas)
         {
             decimal percentual = 0.05m; // 5% de comissão padrão

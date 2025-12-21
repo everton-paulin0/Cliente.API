@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlite("Data Source=crudsolid.db");
-});
+
+
+var connectionString = builder.Configuration.GetConnectionString("ClienteDB");
+
+builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
 
 // Services
 builder.Services.AddScoped<IClientesServices, ClientsServices>();
