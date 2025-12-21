@@ -27,19 +27,17 @@ namespace Cliente.API.Controllers
             return Ok(result);
         }
 
-        // GET: api/cliente/5
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _services.GetById(id);
 
             if (!result.IsSucess)
-                return NotFound(result);
+                return NotFound(result.Message);
 
             return Ok(result);
         }
 
-        // POST: api/cliente
         [HttpPost]
         public IActionResult Post([FromBody] CreateClientInputModel model)
         {
@@ -51,11 +49,9 @@ namespace Cliente.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
         }
 
-        // PUT: api/cliente/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] UpdateClientInputModel model)
         {
-            // garante que o ID do route seja usado
             model.IdCliente = id;
 
             var result = _services.Update(model);
@@ -66,7 +62,6 @@ namespace Cliente.API.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/cliente/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
