@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Cliente.Domain.Models.Enum;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Cliente.Domain.Models
 {
@@ -57,6 +58,13 @@ namespace Cliente.Domain.Models
                 StatusVenda = Status.PagamentoPendente;
                 UpdatedAt = DateTime.UtcNow;
             }
+        }
+
+        public void UpdatePedido( int clientId, int vendedorId)
+        {
+            ClientId = clientId;
+            VendedorId = vendedorId;            
+            UpdatedAt = DateTime.UtcNow;
         }
     }
 }

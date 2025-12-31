@@ -36,18 +36,6 @@ namespace Cliente.Application.Services
             return ResultViewModel<List<ClientItemViemModel>>.Success(model);
         }
 
-        //public ResultViewModel<ClientViewModel> GetById(int id)
-        //{
-        //    var client = _context.Clientes.SingleOrDefault(c => c.Id == id && c.IsActive);
-
-        //    if (client == null)
-        //        return ResultViewModel<ClientViewModel>.Error("Cliente não encontrado");
-
-        //    var model = ClientViewModel.FromEntity(client);
-
-        //    return ResultViewModel<ClientViewModel>.Success(model);
-        //}
-
         public ResultViewModel<ClientViewModel> GetById(int id)
         {
             var client = _context.Clientes.SingleOrDefault(c => c.Id == id && c.IsActive);
@@ -73,7 +61,7 @@ namespace Cliente.Application.Services
 
         public ResultViewModel Update(UpdateClientInputModel model)
         {
-            var client = _context.Clientes.SingleOrDefault(c => c.Id == model.IdCliente);
+            var client = _context.Clientes.SingleOrDefault(c => c.Id == model.IdPedido);
 
             if (client == null)
             {

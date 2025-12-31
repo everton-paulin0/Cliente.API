@@ -7,10 +7,10 @@ namespace Cliente.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClienteController : ControllerBase
+    public class PedidoController : Controller
     {
-        private readonly IClientesServices _services;
-        public ClienteController(AppDbContext context, IClientesServices services)
+        private readonly IPedidosServices _services;
+        public PedidoController(AppDbContext context, IPedidosServices services)
         {
             _services = services;
 
@@ -39,7 +39,7 @@ namespace Cliente.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateClientInputModel model)
+        public IActionResult Post([FromBody] CreatePedidoInputModel model)
         {
             var result = _services.Insert(model);
 
@@ -49,19 +49,7 @@ namespace Cliente.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UpdateClientInputModel model)
-        {
-            model.IdCliente = id; // ✅ nome correto
-
-            var result = _services.Update(model);
-
-            if (!result.IsSucess)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
+        
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cliente.Domain.Models.Enum;
+﻿using Cliente.Domain.Models.Enum;
 
 namespace Cliente.Application.Model
 {
     public class UpdateClientInputModel
     {
         public int IdCliente { get; set; }
+        public int IdPedido { get; set; }
         public string NomeCliente { get; set; }
         public string NumeroDocumento { get; set; }
         public string Endereco { get; set; }
