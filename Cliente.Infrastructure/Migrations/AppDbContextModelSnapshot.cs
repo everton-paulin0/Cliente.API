@@ -129,7 +129,7 @@ namespace Cliente.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("PedidoId")
+                    b.Property<int?>("PedidoId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantidade")
@@ -200,13 +200,9 @@ namespace Cliente.Infrastructure.Migrations
 
             modelBuilder.Entity("Cliente.Domain.Models.Produto", b =>
                 {
-                    b.HasOne("Cliente.Domain.Models.Pedido", "Pedido")
+                    b.HasOne("Cliente.Domain.Models.Pedido", null)
                         .WithMany("Produtos")
-                        .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pedido");
+                        .HasForeignKey("PedidoId");
                 });
 
             modelBuilder.Entity("Cliente.Domain.Models.Client", b =>

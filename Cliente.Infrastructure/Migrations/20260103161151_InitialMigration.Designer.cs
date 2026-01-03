@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cliente.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251221031031_InitialMigration")]
+    [Migration("20260103161151_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -132,7 +132,7 @@ namespace Cliente.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("PedidoId")
+                    b.Property<int?>("PedidoId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantidade")
@@ -203,13 +203,9 @@ namespace Cliente.Infrastructure.Migrations
 
             modelBuilder.Entity("Cliente.Domain.Models.Produto", b =>
                 {
-                    b.HasOne("Cliente.Domain.Models.Pedido", "Pedido")
+                    b.HasOne("Cliente.Domain.Models.Pedido", null)
                         .WithMany("Produtos")
-                        .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pedido");
+                        .HasForeignKey("PedidoId");
                 });
 
             modelBuilder.Entity("Cliente.Domain.Models.Client", b =>

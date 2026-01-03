@@ -20,7 +20,7 @@ namespace Cliente.Application.Model
             Complemento = complemento;
             Cidade = cidade;
             Estado = estado.ToString();
-            ;
+            
         }
 
         public int Id { get; set; }

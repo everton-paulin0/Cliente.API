@@ -34,10 +34,6 @@ namespace Cliente.Infrastructure
                  .HasForeignKey(m => m.VendedorId)
                  .OnDelete(DeleteBehavior.Restrict);
 
-                e.HasMany(m => m.Produtos)
-                 .WithOne(p => p.Pedido)
-                 .HasForeignKey(p => p.PedidoId)
-                 .OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<Client>(e =>

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel;
 using Cliente.Domain.Models.Enum;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Cliente.Domain.Models
 {
