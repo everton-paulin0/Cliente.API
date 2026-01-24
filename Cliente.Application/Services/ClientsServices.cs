@@ -61,7 +61,7 @@ namespace Cliente.Application.Services
 
         public ResultViewModel Update(UpdateClientInputModel model)
         {
-            var client = _context.Clientes.SingleOrDefault(c => c.Id == model.IdPedido);
+            var client = _context.Clientes.SingleOrDefault(c => c.Id == model.IdCliente);
 
             if (client == null)
             {

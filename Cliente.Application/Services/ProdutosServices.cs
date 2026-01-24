@@ -64,7 +64,9 @@ namespace Cliente.Application.Services
             return ResultViewModel<int>.Success(produtos.Id);
         }
 
-        public ResultViewModel Update(UpdateProdutoInputModel model)
+        
+
+        public ResultViewModel UpdateProduto(UpdateProdutoInputModel model)
         {
             var produto = _context.Produtos.SingleOrDefault(c => c.Id == model.IdProduto);
 
@@ -73,7 +75,7 @@ namespace Cliente.Application.Services
                 return ResultViewModel.Error("Produto Não Encontrado");
             }
 
-            produto.Update(model.NomeProduto, model.Quantidade);
+            produto.UpdateProduto(model.NomeProduto, model.Quantidade, model.ValorUnitario);
 
             _context.Produtos.Update(produto);
 

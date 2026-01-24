@@ -24,24 +24,18 @@ namespace Cliente.Domain.Models
         [Description("Quantidade")]
         public int Quantidade { get; set; }
         [Description("Valor Unitário")]
-        public decimal ValorUnitario { get; set; }
+        public decimal ValorUnitario { get; set; }        
+
         
 
-        public void Update(string nomeProduto, int quantidade, decimal valorUnitario, int pedidoId)
+        public decimal CalcularValorTotal() => Quantidade * ValorUnitario;
+
+        public void UpdateProduto(string nomeProduto, int quantidade, decimal valorUnitario)
         {
             NomeProduto = nomeProduto;
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
-            
-
-             UpdatedAt = DateTime.UtcNow;
-        }
-
-        public decimal CalcularValorTotal() => Quantidade * ValorUnitario;
-
-        public void Update(string nomeProduto, int quantidade)
-        {
-            throw new NotImplementedException();
+            UpdatedAt = DateTime.Now;
         }
     }
 }

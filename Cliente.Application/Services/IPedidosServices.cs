@@ -12,7 +12,7 @@ namespace Cliente.Application.Services
         ResultViewModel<List<PedidoItemViewModel>> GetAll(string search = "");
         ResultViewModel<PedidoViewModel> GetById(int id);
         ResultViewModel<int> Insert(CreatePedidoInputModel model);
-        ResultViewModel Update(UpdateClientInputModel model);
+        ResultViewModel UpdatePedido(UpdatePedidoInputModel model);
         ResultViewModel Delete(int id);
 
     }

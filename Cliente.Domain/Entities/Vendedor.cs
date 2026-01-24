@@ -27,5 +27,12 @@ namespace Cliente.Domain.Models
             decimal percentual = 0.05m; // 5% de comissão padrão
             return totalVendas * percentual;
         }
+
+        public void UpdateVendedor(string nomeVendedor, NumeroVendedor numero)
+        {
+            NomeVendedor = nomeVendedor;
+            Numero = numero;
+            UpdatedAt = DateTime.Now;
+        }
     }
 }
