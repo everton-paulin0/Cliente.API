@@ -12,15 +12,18 @@ namespace Cliente.Domain.Models
     public class Produto : BaseEntities
     {
        
-        public Produto(string nomeProduto, int quantidade, decimal valorUnitario) : base()
+        public Produto(string nomeProduto,string marcaProduto, int quantidade, decimal valorUnitario) : base()
         {
             NomeProduto = nomeProduto;
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
-            
+            MarcaProduto = marcaProduto;
+
         }
         [Description("Nome do Produto")]
         public string NomeProduto { get; set; }
+        [Description("Marca do Produto")]
+        public string MarcaProduto { get; set; }
         [Description("Quantidade")]
         public int Quantidade { get; set; }
         [Description("Valor Unitário")]
@@ -30,11 +33,12 @@ namespace Cliente.Domain.Models
 
         public decimal CalcularValorTotal() => Quantidade * ValorUnitario;
 
-        public void UpdateProduto(string nomeProduto, int quantidade, decimal valorUnitario)
+        public void UpdateProduto(string nomeProduto, string marcaProduto, int quantidade, decimal valorUnitario)
         {
             NomeProduto = nomeProduto;
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
+            MarcaProduto = marcaProduto;
             UpdatedAt = DateTime.Now;
         }
     }

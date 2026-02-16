@@ -94,11 +94,7 @@ namespace Cliente.Infrastructure
 
                 e.Property(v => v.NomeVendedor)
                  .IsRequired()
-                 .HasMaxLength(100);
-
-                e.Property(v => v.Numero)
-                 .HasConversion<int>()
-                 .IsRequired();
+                 .HasMaxLength(100);                
 
                 e.HasMany(v => v.Pedidos)
                  .WithOne(p => p.Vendedor)

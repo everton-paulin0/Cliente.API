@@ -12,10 +12,12 @@ namespace Cliente.Application.Model
     {
         [Required]
         public string NomeProduto { get; set; }
+        public string MarcaProduto { get; set; }
         public int Quantidade { get; set; }
         public decimal ValorUnitario { get; set; }
-        
+       
+
         public Produto ToEntityProduto()
-            => new Produto(NomeProduto, Quantidade, ValorUnitario);
+            => new Produto(NomeProduto, MarcaProduto, Quantidade, ValorUnitario);
     }
 }

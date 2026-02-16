@@ -10,15 +10,15 @@ namespace Cliente.Domain.Models
 {
     public class Vendedor : BaseEntities
     {
-        public Vendedor(string nomeVendedor, NumeroVendedor numero) : base()
+        public Vendedor(string nomeVendedor) : base()
         {
             NomeVendedor = nomeVendedor;
-            Numero = numero;
+            
         }
         [Description("Nome do Vendedor")]
         public string NomeVendedor { get; set; }
         [Description("Numero do Vendedor")]
-        public NumeroVendedor Numero { get; set; }
+        
 
         public List<Pedido> Pedidos { get; set; }
 
@@ -28,10 +28,9 @@ namespace Cliente.Domain.Models
             return totalVendas * percentual;
         }
 
-        public void UpdateVendedor(string nomeVendedor, NumeroVendedor numero)
+        public void UpdateVendedor(string nomeVendedor)
         {
-            NomeVendedor = nomeVendedor;
-            Numero = numero;
+            NomeVendedor = nomeVendedor;           
             UpdatedAt = DateTime.Now;
         }
     }

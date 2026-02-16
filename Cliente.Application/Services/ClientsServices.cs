@@ -24,12 +24,12 @@ namespace Cliente.Application.Services
             _context.Clientes.Update(client);
             _context.SaveChanges();
 
-            return ResultViewModel.Success();
+            return ResultViewModel.Success("Cliente Deletado com sucesso");
         }
 
         public ResultViewModel<List<ClientItemViemModel>> GetAll(string search = "")
         {
-            var clients = _context.Clientes.Where(c => !c.IsActive).ToList();
+            var clients = _context.Clientes.Where(c => c.IsActive).ToList();
 
             var model = clients.Select(ClientItemViemModel.FromEntityClient).ToList();
 
@@ -56,7 +56,7 @@ namespace Cliente.Application.Services
             _context.Clientes.Add(client);
             _context.SaveChanges();
 
-            return ResultViewModel<int>.Success(client.Id);
+            return ResultViewModel<int>.Success(client.Id, "Cliente Cadastrado com sucesso");
         }
 
         public ResultViewModel Update(UpdateClientInputModel model)
@@ -74,7 +74,7 @@ namespace Cliente.Application.Services
 
             _context.SaveChanges();
 
-            return ResultViewModel.Success();
+            return ResultViewModel.Success("Cliente Atualizado com sucesso");
         }
     }
 }

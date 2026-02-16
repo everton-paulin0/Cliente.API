@@ -12,7 +12,7 @@ namespace Cliente.Domain.Models
         {
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
-            IsActive = false;
+            IsActive = true;
         }
 
         public int Id { get; set; }
@@ -22,7 +22,7 @@ namespace Cliente.Domain.Models
 
         public void SetAsDeleted() 
         { 
-            IsActive = true; 
+            IsActive = false; 
         }
     }
 }

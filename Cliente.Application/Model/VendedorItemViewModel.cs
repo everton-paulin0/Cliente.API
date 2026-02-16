@@ -11,18 +11,18 @@ namespace Cliente.Application.Model
 {
     public class VendedorItemViewModel
     {
-        public VendedorItemViewModel(int id, string nomeVendedor, string numero)
+        public VendedorItemViewModel(int id, string nomeVendedor)
         {
             Id = id;
             NomeVendedor = nomeVendedor;
-            Numero = numero;
+            
         }
 
         public int Id { get; set; }
         public string NomeVendedor { get; set; }        
-        public string Numero { get; set; }
+        
 
         public static VendedorItemViewModel FromEntityVendedor(Vendedor vendedor)
-           => new VendedorItemViewModel(vendedor.Id, vendedor.NomeVendedor, vendedor.Numero.ToString());
+           => new VendedorItemViewModel(vendedor.Id, vendedor.NomeVendedor);
     }
 }

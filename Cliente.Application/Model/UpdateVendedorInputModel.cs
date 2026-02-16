@@ -11,6 +11,6 @@ namespace Cliente.Application.Model
     {
         public int IdVendedor { get; set; }
         public string NomeVendedor { get; set; }
-        public NumeroVendedor Numero { get; set; }
+       
     }
 }

@@ -1,19 +1,17 @@
 ﻿using Cliente.Application.Model;
 using Cliente.Application.Services;
-using Cliente.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cliente.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PedidoController : Controller
+    public class ProdutoController : Controller
     {
-        private readonly IPedidosServices _services;
-        public PedidoController(IPedidosServices services)
+        private readonly IProdutosServices _services;
+        public ProdutoController(IProdutosServices services)
         {
             _services = services;
-
         }
 
         [HttpGet]
@@ -39,7 +37,7 @@ namespace Cliente.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreatePedidoInputModel model)
+        public IActionResult Post([FromBody] CreateProdutoInputModel model)
         {
             var result = _services.Insert(model);
 
@@ -49,7 +47,19 @@ namespace Cliente.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
         }
 
-        
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] UpdateProdutoInputModel model)
+        {
+            model.IdProduto = id;
+
+            var result = _services.UpdateProduto(model);
+
+            if (!result.IsSucess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -60,18 +70,6 @@ namespace Cliente.API.Controllers
 
             return Ok(result);
         }
-
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UpdatePedidoInputModel model)
-        {
-            model.IdPedido = id;
-
-            var result = _services.UpdatePedido(model);
-
-            if (!result.IsSucess)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
     }
 }
+

@@ -10,10 +10,9 @@ namespace Cliente.API.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly IClientesServices _services;
-        public ClienteController(AppDbContext context, IClientesServices services)
+        public ClienteController(IClientesServices services)
         {
             _services = services;
-
         }
 
         [HttpGet]
@@ -52,7 +51,7 @@ namespace Cliente.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] UpdateClientInputModel model)
         {
-            model.IdCliente = id; // ✅ nome correto
+            model.IdCliente = id; 
 
             var result = _services.Update(model);
 

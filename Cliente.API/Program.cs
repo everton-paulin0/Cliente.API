@@ -14,6 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString
 
 // Services
 builder.Services.AddScoped<IClientesServices, ClientsServices>();
+builder.Services.AddScoped<IPedidosServices, PedidosService>();
+builder.Services.AddScoped<IProdutosServices, ProdutosServices>();
+builder.Services.AddScoped<IVendedorServices, VendedorServices>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

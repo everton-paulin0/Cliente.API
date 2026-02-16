@@ -7,13 +7,12 @@ namespace Cliente.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PedidoController : Controller
+    public class VendedorController : Controller
     {
-        private readonly IPedidosServices _services;
-        public PedidoController(IPedidosServices services)
+        private readonly IVendedorServices _services;
+        public VendedorController(IVendedorServices services)
         {
             _services = services;
-
         }
 
         [HttpGet]
@@ -39,7 +38,7 @@ namespace Cliente.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreatePedidoInputModel model)
+        public IActionResult Post([FromBody] CreateVendedorInputModel model)
         {
             var result = _services.Insert(model);
 
@@ -49,7 +48,20 @@ namespace Cliente.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
         }
 
-        
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] UpdateVendedorInputModel model)
+        {
+            model.IdVendedor = id; 
+
+            var result = _services.UpdateVendedor(model);
+
+            if (!result.IsSucess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -57,19 +69,6 @@ namespace Cliente.API.Controllers
 
             if (!result.IsSucess)
                 return NotFound(result);
-
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UpdatePedidoInputModel model)
-        {
-            model.IdPedido = id;
-
-            var result = _services.UpdatePedido(model);
-
-            if (!result.IsSucess)
-                return BadRequest(result);
 
             return Ok(result);
         }

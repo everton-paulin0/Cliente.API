@@ -49,7 +49,5 @@ namespace Cliente.Domain.Models
 
             UpdatedAt = DateTime.UtcNow; 
         }
-
-        
     }    
 }

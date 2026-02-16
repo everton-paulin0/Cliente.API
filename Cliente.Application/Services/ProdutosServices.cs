@@ -35,7 +35,7 @@ namespace Cliente.Application.Services
 
         public ResultViewModel<List<ProdutoItemViewModel>> GetAll(string search = "")
         {
-            var produtos = _context.Produtos.Where(c => !c.IsActive).ToList();
+            var produtos = _context.Produtos.Where(c => c.IsActive).ToList();
 
             var model = produtos.Select(ProdutoItemViewModel.FromEntityProduto).ToList();
 
@@ -47,7 +47,7 @@ namespace Cliente.Application.Services
             var produtos = _context.Produtos.SingleOrDefault(pr => pr.Id == id && pr.IsActive);
 
             if (produtos == null)
-                return ResultViewModel<ProdutoViewModel>.Error("Produto não encontrado");
+                return ResultViewModel<ProdutoViewModel>.Error("Produto Não encontrado");
 
             var model = ProdutoViewModel.FromEntityProduto(produtos);
 
@@ -61,7 +61,7 @@ namespace Cliente.Application.Services
             _context.Produtos.Add(produtos);
             _context.SaveChanges();
 
-            return ResultViewModel<int>.Success(produtos.Id);
+            return ResultViewModel<int>.Success(produtos.Id, "Produto Cadastrado com sucesso");
         }
 
         
@@ -81,7 +81,7 @@ namespace Cliente.Application.Services
 
             _context.SaveChanges();
 
-            return ResultViewModel.Success();
+            return ResultViewModel.Success("Produto Atualizado com sucesso");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Cliente.Application.Services
             _context.Vendedores.Update(vendedor);
             _context.SaveChanges();
 
-            return ResultViewModel.Success();
+            return ResultViewModel.Success("Vendedor Deletado com sucesso.");
         }
 
         public ResultViewModel<List<VendedorItemViewModel>> GetAll(string search = "")
@@ -61,7 +61,7 @@ namespace Cliente.Application.Services
             _context.Vendedores.Add(vendedor);
             _context.SaveChanges();
 
-            return ResultViewModel<int>.Success(vendedor.Id);
+           return ResultViewModel<int>.Success(vendedor.Id,"Vendedor Cadastrado com sucesso.");
         }
 
         public ResultViewModel UpdateVendedor(UpdateVendedorInputModel model)
@@ -73,13 +73,13 @@ namespace Cliente.Application.Services
                 return ResultViewModel.Error("Vendedor Não Encontrado");
             }
 
-            vendedor.UpdateVendedor(model.NomeVendedor, model.Numero);
+            vendedor.UpdateVendedor(model.NomeVendedor);
 
             _context.Vendedores.Update(vendedor);
 
             _context.SaveChanges();
 
-            return ResultViewModel.Success();
+            return ResultViewModel.Success("Vendedor Atualizado com sucesso.");
         }
     }
 }

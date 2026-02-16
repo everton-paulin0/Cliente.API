@@ -87,6 +87,7 @@ namespace Cliente.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NomeProduto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MarcaProduto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
                     ValorUnitario = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PedidoId = table.Column<int>(type: "int", nullable: true),

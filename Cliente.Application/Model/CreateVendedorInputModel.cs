@@ -13,9 +13,9 @@ namespace Cliente.Application.Model
     {
         [Required]
         public string NomeVendedor { get; set; }
-        public NumeroVendedor Numero { get; set; }
+        
 
         public Vendedor ToEntityVendedor()
-                    => new Vendedor(NomeVendedor, Numero);
+                    => new Vendedor(NomeVendedor);
     }
 }
