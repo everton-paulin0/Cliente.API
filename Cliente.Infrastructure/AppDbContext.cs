@@ -80,12 +80,22 @@ namespace Cliente.Infrastructure
                  .IsRequired()
                  .HasMaxLength(100);
 
+                e.Property(p => p.MarcaProduto)
+                 .IsRequired()
+                 .HasMaxLength(100);
+
                 e.Property(p => p.Quantidade)
                  .IsRequired();
 
                 e.Property(p => p.ValorUnitario)
                  .HasPrecision(18, 2)
                  .IsRequired();
+
+                // 🔥 RELACIONAMENTO
+                e.HasOne(p => p.Pedido)
+                 .WithMany(p => p.Produtos)
+                 .HasForeignKey(p => p.PedidoId)
+                 .OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<Vendedor>(e =>

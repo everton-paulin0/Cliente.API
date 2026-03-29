@@ -75,7 +75,7 @@ namespace Cliente.Application.Services
                 return ResultViewModel.Error("Produto Não Encontrado");
             }
 
-            produto.UpdateProduto(model.NomeProduto, model.Quantidade, model.ValorUnitario);
+            produto.UpdateProduto(model.NomeProduto,model.MarcaProduto,model.Quantidade, model.ValorUnitario);
 
             _context.Produtos.Update(produto);
 
