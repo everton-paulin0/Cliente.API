@@ -44,5 +44,16 @@ namespace Cliente.Domain.Models
             MarcaProduto = marcaProduto;
             UpdatedAt = DateTime.Now;
         }
+
+        public void BaixarEstoque(int quantidade)
+        {
+            if (quantidade <= 0)
+                throw new Exception("Quantidade inválida");
+
+            if (Quantidade < quantidade)
+                throw new Exception("Estoque insuficiente");
+
+            Quantidade -= quantidade;
+        }
     }
 }

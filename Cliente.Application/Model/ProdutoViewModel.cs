@@ -18,7 +18,7 @@ namespace Cliente.Application.Model
         }
 
         public int Id { get; set; }
-        public string NomeProduto { get; set; }
+        public string NomeProduto { get; set; } = string.Empty;
         public int Quantidade { get; set; }
         public decimal ValorUnitario { get; set; }
         

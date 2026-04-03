@@ -1,32 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cliente.Domain.Models;
-using Cliente.Domain.Models.Enum;
+﻿using Cliente.Domain.Entities;
+
 
 namespace Cliente.Application.Model
 {
     public class PedidoItemViewModel
     {
-        public PedidoItemViewModel(int id, int clientId, int vendedorId, string statusVenda, List<Produto> produtos)
+        public int ProdutoId { get; set; }
+        public string NomeProduto { get; set; }
+        public int Quantidade { get; set; }
+        public decimal ValorUnitario { get; set; }
+
+        public static PedidoItemViewModel FromEntity(PedidoItem item)
         {
-            Id = id;
-            ClientId = clientId;
-            VendedorId = vendedorId;
-            StatusVenda = statusVenda.ToString();
-            Produtos = [];
+            return new PedidoItemViewModel
+            {
+                ProdutoId = item.ProdutoId,
+                NomeProduto = item.Produto.NomeProduto,
+                Quantidade = item.Quantidade,
+                ValorUnitario = item.ValorUnitario
+            };
         }
-
-        public int Id { get; set; }
-        public int ClientId { get; set; }
-        public int VendedorId { get; set; }
-        public string StatusVenda { get; set; }        
-        public List<Produto> Produtos { get; set; }
-
-        public static PedidoItemViewModel FromEntityPedido(Pedido pedido)
-            => new PedidoItemViewModel(pedido.Id, pedido.ClientId, pedido.VendedorId, pedido.StatusVenda.ToString(), pedido.Produtos.ToList());
     }
 }
+

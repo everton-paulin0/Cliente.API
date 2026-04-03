@@ -1,67 +1,93 @@
-﻿using Cliente.Domain.Models.Enum;
+﻿using Cliente.Domain.Entities;
+using Cliente.Domain.Models.Enum;
 
 namespace Cliente.Domain.Models
 {
     public class Pedido : BaseEntities
     {
-        public Pedido(int clientId, int vendedorId, Status statusVenda) : base()
+        public Pedido(int clientId, int vendedorId, Status statusVenda)
         {
+            if (clientId <= 0)
+                throw new Exception("Cliente inválido");
+
+            if (vendedorId <= 0)
+                throw new Exception("Vendedor inválido");
+
             ClientId = clientId;
             VendedorId = vendedorId;
             StatusVenda = statusVenda;
-            Produtos = new List<Produto>();
-        }
 
+            Itens = new List<PedidoItem>();
+        }
         public int ClientId { get; set; }
-        public Client Cliente { get; set; }
+        public Client Cliente { get; set; } = null!;
 
         public int VendedorId { get; set; }
-        public Vendedor Vendedor { get; set; }
+        public Vendedor Vendedor { get; set; } = null!;
 
         public Status StatusVenda { get; set; }
 
-        public List<Produto> Produtos { get; set; }
+        public List<PedidoItem> Itens { get; private set; } = new();
 
-        // ===== Métodos de domínio =====
-
-        public void Cancelado()
+        // ✅ UPDATE
+        public void UpdatePedido(int clientId, int vendedorId, Status statusVenda)
         {
-            if (StatusVenda == Status.Iniciado || StatusVenda == Status.Congelado)
-            {
-                StatusVenda = Status.Cancelado;
-                UpdatedAt = DateTime.UtcNow;
-            }
-        }
+            if (clientId <= 0)
+                throw new Exception("Cliente inválido");
 
-        public void Finalizado()
-        {
-            if (StatusVenda == Status.PagamentoPendente)
-            {
-                StatusVenda = Status.Finalizado;
-                UpdatedAt = DateTime.UtcNow;
-            }
-        }
+            if (vendedorId <= 0)
+                throw new Exception("Vendedor inválido");
 
-        public void PendentePagamento()
-        {
-            if (StatusVenda == Status.Iniciado || StatusVenda == Status.Finalizado)
-            {
-                StatusVenda = Status.PagamentoPendente;
-                UpdatedAt = DateTime.UtcNow;
-            }
-        }
-
-        public void UpdatePedido(int clientId, int vendedorId, Status statusVenda, List<Produto> produtos)
-        {
             ClientId = clientId;
             VendedorId = vendedorId;
             StatusVenda = statusVenda;
-            Produtos = produtos;
 
             UpdatedAt = DateTime.UtcNow;
         }
 
+        // ✅ LIMPAR ITENS (resolve erro do Clear)
+        public void LimparItens()
+        {
+            foreach (var item in Itens)
+            {
+                item.Produto.Quantidade += item.Quantidade;
+            }
 
+            Itens.Clear();
+        }
+
+        // ✅ ADICIONAR PRODUTO
+        public void AdicionarProduto(Produto produto, int quantidade)
+        {
+            if (produto == null)
+                throw new Exception("Produto inválido");
+
+            if (quantidade <= 0)
+                throw new Exception("Quantidade inválida");
+
+            produto.BaixarEstoque(quantidade);
+
+            var item = Itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
+
+            if (item != null)
+            {
+                item.Quantidade += quantidade;
+            }
+            else
+            {
+                Itens.Add(new PedidoItem
+                {
+                    ProdutoId = produto.Id,
+                    Produto = produto,
+                    Quantidade = quantidade,
+                    ValorUnitario = produto.ValorUnitario
+                });
+            }
+        }
+
+        public decimal GetTotal()
+            => Itens.Sum(i => i.Total);
     }
+
 }
 

@@ -40,4 +40,6 @@ namespace Cliente.Application.Model
             => new(default, false, message);
 
     }
+
+
 }

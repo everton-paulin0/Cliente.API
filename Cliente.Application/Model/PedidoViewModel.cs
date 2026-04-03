@@ -1,30 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using Cliente.Domain.Models;
 
 namespace Cliente.Application.Model
 {
     public class PedidoViewModel
     {
-        public PedidoViewModel(int id, int clientId, int vendedorId, string statusVenda, List<Produto> produtos)
+        public PedidoViewModel(int id, int clientId, int vendedorId, string statusVenda, List<PedidoItemViewModel> itens)
         {
             Id = id;
             ClientId = clientId;
             VendedorId = vendedorId;
-            StatusVenda = statusVenda.ToString();
-            Produtos = [];
+            StatusVenda = statusVenda;
+            Itens = itens;
         }
 
         public int Id { get; set; }
         public int ClientId { get; set; }
         public int VendedorId { get; set; }
         public string StatusVenda { get; set; }
-        public List<Produto> Produtos { get; set; } = new List<Produto>();
+        public List<PedidoItemViewModel> Itens { get; set; } = new();
 
-        public static PedidoViewModel PedidoFromEntity(Pedido entity)
-            => new(entity.Id, entity.ClientId, entity.VendedorId, entity.StatusVenda.ToString(), entity.Produtos);
+        public static PedidoViewModel FromEntity(Pedido entity)
+            => new PedidoViewModel(
+                entity.Id,
+                entity.ClientId,
+                entity.VendedorId,
+                entity.StatusVenda.ToString(),
+                entity.Itens.Select(PedidoItemViewModel.FromEntity).ToList()
+            );
     }
 }

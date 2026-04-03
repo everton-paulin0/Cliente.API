@@ -1,5 +1,4 @@
 ﻿using Cliente.Application.Model;
-using Cliente.Domain.Models.Enum;
 using Cliente.Infrastructure;
 
 namespace Cliente.Application.Services
@@ -29,14 +28,17 @@ namespace Cliente.Application.Services
             return ResultViewModel.Success();
         }
 
-        public ResultViewModel<List<PedidoItemViewModel>> GetAll(string search = "")
+        public ResultViewModel<List<PedidoViewModel>> GetAll(string search = "")
         {
-            var pedidos = _context.Pedidos.Where(c => !c.IsActive).ToList();
+            var pedidos = _context.Pedidos
+                .Where(c => c.IsActive)
+                .ToList();
 
-            var model = pedidos.Select(PedidoItemViewModel.FromEntityPedido).ToList();
+            var model = pedidos
+                .Select(PedidoViewModel.FromEntity)
+                .ToList();
 
-
-            return ResultViewModel<List<PedidoItemViewModel>>.Success(model);
+            return ResultViewModel<List<PedidoViewModel>>.Success(model);
         }
 
         public ResultViewModel<PedidoViewModel> GetById(int id)
@@ -46,14 +48,26 @@ namespace Cliente.Application.Services
             if (pedido == null)
                 return ResultViewModel<PedidoViewModel>.Error("Pedido não encontrado");
 
-            var model = PedidoViewModel.PedidoFromEntity(pedido);
+            var model = PedidoViewModel.FromEntity(pedido);
 
             return ResultViewModel<PedidoViewModel>.Success(model);
         }
 
+        
         public ResultViewModel<int> Insert(CreatePedidoInputModel model)
         {
             var pedido = model.ToEntityPedido();
+
+            foreach (var item in model.Itens)
+            {
+                var produto = _context.Produtos
+                    .SingleOrDefault(p => p.Id == item.ProdutoId);
+
+                if (produto == null)
+                    return ResultViewModel<int>.Error($"Produto {item.ProdutoId} não encontrado");
+
+                pedido.AdicionarProduto(produto, item.Quantidade);
+            }
 
             _context.Pedidos.Add(pedido);
             _context.SaveChanges();
@@ -61,27 +75,50 @@ namespace Cliente.Application.Services
             return ResultViewModel<int>.Success(pedido.Id);
         }
 
-       
 
-        
 
         public ResultViewModel UpdatePedido(UpdatePedidoInputModel model)
         {
-            var pedido = _context.Pedidos.SingleOrDefault(c => c.Id == model.IdPedido);
+            var pedido = _context.Pedidos
+                .SingleOrDefault(c => c.Id == model.IdPedido);
 
             if (pedido == null)
             {
                 return ResultViewModel.Error("Pedido Não Encontrado");
             }
 
-            pedido.UpdatePedido(model.ClientId, model.VendedorId, model.StatusVenda, model.Produtos);
+            // 1. Atualiza dados básicos
+            pedido.UpdatePedido(model.ClientId, model.VendedorId, model.StatusVenda);
 
-            _context.Pedidos.Update(pedido);
+            // ⚠️ IMPORTANTE: limpar itens antigos
+            pedido.Itens.Clear();
 
+            // 2. Manipula itens
+            foreach (var item in model.Itens)
+            {
+                var produto = _context.Produtos
+                    .SingleOrDefault(p => p.Id == item.ProdutoId);
+
+                if (produto == null)
+                    return ResultViewModel.Error($"Produto {item.ProdutoId} não encontrado");
+
+                if (produto.Quantidade < item.Quantidade)
+                    return ResultViewModel.Error($"Estoque insuficiente para o produto {produto.NomeProduto}");
+
+                pedido.AdicionarProduto(produto, item.Quantidade);
+            }
+
+            // 3. Salva
             _context.SaveChanges();
 
             return ResultViewModel.Success();
         }
+
+        ResultViewModel<List<PedidoItemViewModel>> IPedidosServices.GetAll(string search)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+
 
