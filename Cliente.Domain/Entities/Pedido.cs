@@ -1,5 +1,4 @@
-﻿using Cliente.Domain.Entities;
-using Cliente.Domain.Models.Enum;
+﻿using Cliente.Domain.Models.Enum;
 
 namespace Cliente.Domain.Models
 {
@@ -17,7 +16,7 @@ namespace Cliente.Domain.Models
             VendedorId = vendedorId;
             StatusVenda = statusVenda;
 
-            Itens = new List<PedidoItem>();
+            Itens = new List<ItemPedido>();
         }
         public int ClientId { get; set; }
         public Client Cliente { get; set; } = null!;
@@ -27,7 +26,7 @@ namespace Cliente.Domain.Models
 
         public Status StatusVenda { get; set; }
 
-        public List<PedidoItem> Itens { get; private set; } = new();
+        public List<ItemPedido> Itens { get; private set; } = new();
 
         // ✅ UPDATE
         public void UpdatePedido(int clientId, int vendedorId, Status statusVenda)
@@ -71,22 +70,22 @@ namespace Cliente.Domain.Models
 
             if (item != null)
             {
-                item.Quantidade += quantidade;
+                item.AdicionarQuantidade(quantidade);
             }
             else
             {
-                Itens.Add(new PedidoItem
-                {
-                    ProdutoId = produto.Id,
-                    Produto = produto,
-                    Quantidade = quantidade,
-                    ValorUnitario = produto.ValorUnitario
-                });
+                Itens.Add(new ItemPedido(
+                    produto.Id,
+                    quantidade,
+                    produto.ValorUnitario,
+                    produto
+                ));
             }
         }
 
         public decimal GetTotal()
-            => Itens.Sum(i => i.Total);
+            => Itens.Sum(i => i.Total());
+
     }
 
 }

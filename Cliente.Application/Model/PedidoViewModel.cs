@@ -1,5 +1,4 @@
-﻿
-using Cliente.Domain.Models;
+﻿using Cliente.Domain.Models;
 
 namespace Cliente.Application.Model
 {
@@ -18,6 +17,7 @@ namespace Cliente.Application.Model
         public int ClientId { get; set; }
         public int VendedorId { get; set; }
         public string StatusVenda { get; set; }
+
         public List<PedidoItemViewModel> Itens { get; set; } = new();
 
         public static PedidoViewModel FromEntity(Pedido entity)
@@ -26,7 +26,7 @@ namespace Cliente.Application.Model
                 entity.ClientId,
                 entity.VendedorId,
                 entity.StatusVenda.ToString(),
-                entity.Itens.Select(PedidoItemViewModel.FromEntity).ToList()
+                entity.Itens.Select(PedidoItemViewModel.ItemPedidoFromEntity).ToList()
             );
     }
 }

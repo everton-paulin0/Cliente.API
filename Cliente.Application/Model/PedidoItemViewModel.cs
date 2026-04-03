@@ -1,4 +1,4 @@
-﻿using Cliente.Domain.Entities;
+﻿
 
 
 namespace Cliente.Application.Model
@@ -10,7 +10,7 @@ namespace Cliente.Application.Model
         public int Quantidade { get; set; }
         public decimal ValorUnitario { get; set; }
 
-        public static PedidoItemViewModel FromEntity(PedidoItem item)
+        public static PedidoItemViewModel ItemPedidoFromEntity(ItemPedido item)
         {
             return new PedidoItemViewModel
             {
@@ -22,4 +22,5 @@ namespace Cliente.Application.Model
         }
     }
 }
+
 

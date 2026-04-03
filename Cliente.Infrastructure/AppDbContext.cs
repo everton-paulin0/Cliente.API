@@ -15,6 +15,7 @@ namespace Cliente.Infrastructure
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Vendedor> Vendedores { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<ItemPedido> ItemPedidos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -99,13 +100,14 @@ namespace Cliente.Infrastructure
 
                 e.Property(v => v.NomeVendedor)
                  .IsRequired()
-                 .HasMaxLength(100);                
+                 .HasMaxLength(100);
 
                 e.HasMany(v => v.Pedidos)
                  .WithOne(p => p.Vendedor)
                  .HasForeignKey(p => p.VendedorId)
                  .OnDelete(DeleteBehavior.Restrict);
             });
+
         }
     }
 }
