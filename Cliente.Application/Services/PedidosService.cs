@@ -28,9 +28,17 @@ namespace Cliente.Application.Services
             return ResultViewModel.Success();
         }
 
-        public ResultViewModel<List<PedidoItemViewModel>> GetAll(string search = "")
+        public ResultViewModel<List<PedidoViewModel>> GetAll(string search = "")
         {
-            throw new NotImplementedException();
+            var pedidos = _context.Pedidos
+                .Where(c => c.IsActive)
+                .ToList();
+
+            var model = pedidos
+                .Select(p => PedidoViewModel.FromEntity(p))
+                .ToList();
+
+            return ResultViewModel<List<PedidoViewModel>>.Success(model);
         }
 
         public ResultViewModel<PedidoViewModel> GetById(int id)
@@ -67,9 +75,56 @@ namespace Cliente.Application.Services
             return ResultViewModel<int>.Success(pedido.Id);
         }
 
+        //public ResultViewModel UpdatePedido(UpdatePedidoInputModel model)
+        //{
+        //    var pedido = _context.Pedidos
+        //        .SingleOrDefault(p => p.Id == model.IdPedido);
+
+        //    if (pedido == null)
+        //        return ResultViewModel.Error("Pedido não encontrado");
+
+        //    // atualiza dados básicos
+        //    pedido.UpdatePedido(model.ClientId, model.VendedorId, model.StatusVenda);
+
+
+        //    _context.SaveChanges();
+
+        //    return ResultViewModel.Success("Pedido atualizado com sucesso");
+        //}
+
         public ResultViewModel UpdatePedido(UpdatePedidoInputModel model)
         {
-            throw new NotImplementedException();
+            var pedido = _context.Pedidos
+                .SingleOrDefault(p => p.Id == model.IdPedido);
+
+            if (pedido == null)
+                return ResultViewModel.Error("Pedido não encontrado");
+
+            // 1. Atualiza dados básicos
+            pedido.UpdatePedido(model.ClientId, model.VendedorId, model.StatusVenda);
+
+            // 2. Devolve estoque e limpa itens
+            pedido.LimparItens();
+
+            // 3. Adiciona novamente
+            foreach (var item in model.Itens)
+            {
+                var produto = _context.Produtos
+                    .SingleOrDefault(p => p.Id == item.ProdutoId);
+
+                if (produto == null)
+                    return ResultViewModel.Error($"Produto {item.ProdutoId} não encontrado");
+
+                if (produto.Quantidade < item.Quantidade)
+                    return ResultViewModel.Error($"Estoque insuficiente para {produto.NomeProduto}");
+
+                pedido.AdicionarProduto(produto, item.Quantidade);
+            }
+
+            // 4. Salva
+            _context.SaveChanges();
+
+            return ResultViewModel.Success("Pedido atualizado com sucesso");
         }
     }
 }

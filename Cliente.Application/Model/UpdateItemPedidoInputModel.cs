@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Cliente.Application.Model
 {
-    
     public class UpdateItemPedidoInputModel
     {
         public int IdItemPedido { get; set; }

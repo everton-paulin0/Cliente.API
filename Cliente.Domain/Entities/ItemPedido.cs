@@ -44,4 +44,6 @@ public class ItemPedido:BaseEntities
         Produto = produto;
         ValorUnitario = valorUnitario;
     }
+
+
 }

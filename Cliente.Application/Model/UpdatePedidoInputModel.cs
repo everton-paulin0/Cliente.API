@@ -10,6 +10,8 @@ namespace Cliente.Application.Model
         public int VendedorId { get; set; }
         public Status StatusVenda { get; set; }
 
-        public List<CreatePedidoInputModel> Itens { get; set; } = new();
-    }    
+        public List<UpdateItemPedidoInputModel> Itens { get; set; } = new();
+    }
 }
+
+

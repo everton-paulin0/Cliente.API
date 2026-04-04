@@ -10,7 +10,7 @@ namespace Cliente.Application.Model
         public int Quantidade { get; set; }
         public decimal ValorUnitario { get; set; }
 
-        public static PedidoItemViewModel ItemPedidoFromEntity(ItemPedido item)
+        public static PedidoItemViewModel PedidoFromEntity(ItemPedido item)
         {
             return new PedidoItemViewModel
             {
