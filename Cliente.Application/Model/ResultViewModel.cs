@@ -42,4 +42,6 @@ namespace Cliente.Application.Model
     }
 
 
+
+
 }
