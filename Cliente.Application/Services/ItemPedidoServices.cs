@@ -1,5 +1,6 @@
 ﻿using Cliente.Application.Model;
 using Cliente.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cliente.Application.Services
 {
@@ -46,13 +47,28 @@ namespace Cliente.Application.Services
 
         public ResultViewModel<int> Insert(CreateItemPedidoInputModel model)
         {
-            var itemPedido = model.ToEntityItemPedido();
+            var pedido = _context.Pedidos
+                .Include(p => p.Itens)
+                .SingleOrDefault(p => p.Id == model.PedidoId);
 
-            _context.ItemPedidos.Add(itemPedido);
+            if (pedido == null)
+                return ResultViewModel<int>.Error("Pedido não encontrado");
+
+            var produto = _context.Produtos
+                .SingleOrDefault(p => p.Id == model.ProdutoId);
+
+            if (produto == null)
+                return ResultViewModel<int>.Error("Produto não encontrado");
+
+            // 🔥 REGRA DE NEGÓCIO CENTRALIZADA
+            pedido.AdicionarProduto(produto, model.Quantidade);
+
+            _context.Pedidos.Update(pedido);
             _context.SaveChanges();
 
-            return ResultViewModel<int>.Success(itemPedido.Id, "Item do Pedido Cadastrado com sucesso.");
+            return ResultViewModel<int>.Success(pedido.Id);
         }
+        
 
         public ResultViewModel UpdatePedido(UpdateItemPedidoInputModel model)
         {

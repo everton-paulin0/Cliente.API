@@ -75,22 +75,6 @@ namespace Cliente.Application.Services
             return ResultViewModel<int>.Success(pedido.Id);
         }
 
-        //public ResultViewModel UpdatePedido(UpdatePedidoInputModel model)
-        //{
-        //    var pedido = _context.Pedidos
-        //        .SingleOrDefault(p => p.Id == model.IdPedido);
-
-        //    if (pedido == null)
-        //        return ResultViewModel.Error("Pedido não encontrado");
-
-        //    // atualiza dados básicos
-        //    pedido.UpdatePedido(model.ClientId, model.VendedorId, model.StatusVenda);
-
-
-        //    _context.SaveChanges();
-
-        //    return ResultViewModel.Success("Pedido atualizado com sucesso");
-        //}
 
         public ResultViewModel UpdatePedido(UpdatePedidoInputModel model)
         {
