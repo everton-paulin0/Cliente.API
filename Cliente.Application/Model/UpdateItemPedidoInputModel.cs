@@ -10,6 +10,7 @@ namespace Cliente.Application.Model
     {
         public int IdItemPedido { get; set; }
         public int ProdutoId { get; set; }
+        public int PedidoId { get; private set; }
         public int Quantidade { get; set; }
     }
 }

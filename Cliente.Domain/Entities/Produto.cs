@@ -29,10 +29,7 @@ namespace Cliente.Domain.Models
         [Description("Valor Unitário")]
         public decimal ValorUnitario { get; set; }
 
-        public int PedidoId { get; set; }
-        public Pedido Pedido { get; set; }
-
-
+        
 
         public decimal CalcularValorTotal() => Quantidade * ValorUnitario;
 

@@ -77,8 +77,7 @@ namespace Cliente.Domain.Models
                 Itens.Add(new ItemPedido(
                     produto.Id,
                     quantidade,
-                    produto.ValorUnitario,
-                    produto
+                    produto.ValorUnitario
                 ));
             }
         }

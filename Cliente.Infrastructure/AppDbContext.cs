@@ -3,24 +3,27 @@ using Microsoft.EntityFrameworkCore;
 
 
 namespace Cliente.Infrastructure
-{
-    public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
+        public class AppDbContext : DbContext
         {
-        }
+            public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+            {
+            }
 
-        public DbSet<Client> Clientes { get; set; }
-        public DbSet<Produto> Produtos { get; set; }
-        public DbSet<Vendedor> Vendedores { get; set; }
-        public DbSet<Pedido> Pedidos { get; set; }
-        public DbSet<ItemPedido> ItemPedidos { get; set; }
+            public DbSet<Client> Clientes { get; set; }
+            public DbSet<Produto> Produtos { get; set; }
+            public DbSet<Vendedor> Vendedores { get; set; }
+            public DbSet<Pedido> Pedidos { get; set; }
+            public DbSet<ItemPedido> ItemPedidos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            // =========================
+            // PEDIDO
+            // =========================
             builder.Entity<Pedido>(e =>
             {
                 e.HasKey(m => m.Id);
@@ -34,9 +37,11 @@ namespace Cliente.Infrastructure
                  .WithMany(v => v.Pedidos)
                  .HasForeignKey(m => m.VendedorId)
                  .OnDelete(DeleteBehavior.Restrict);
-
             });
 
+            // =========================
+            // CLIENT
+            // =========================
             builder.Entity<Client>(e =>
             {
                 e.HasKey(c => c.Id);
@@ -66,13 +71,11 @@ namespace Cliente.Infrastructure
                 e.Property(c => c.Estado)
                  .HasConversion<int>()
                  .IsRequired();
-
-                e.HasMany(c => c.Pedidos)
-                 .WithOne(p => p.Cliente)
-                 .HasForeignKey(p => p.ClientId)
-                 .OnDelete(DeleteBehavior.Restrict);
             });
 
+            // =========================
+            // PRODUTO
+            // =========================
             builder.Entity<Produto>(e =>
             {
                 e.HasKey(p => p.Id);
@@ -91,9 +94,11 @@ namespace Cliente.Infrastructure
                 e.Property(p => p.ValorUnitario)
                  .HasPrecision(18, 2)
                  .IsRequired();
-                
             });
 
+            // =========================
+            // VENDEDOR
+            // =========================
             builder.Entity<Vendedor>(e =>
             {
                 e.HasKey(v => v.Id);
@@ -108,6 +113,29 @@ namespace Cliente.Infrastructure
                  .OnDelete(DeleteBehavior.Restrict);
             });
 
+            // =========================
+            // ITEM PEDIDO (🔥 IMPORTANTE)
+            // =========================
+            builder.Entity<ItemPedido>(e =>
+            {
+                e.HasKey(i => i.Id);
+
+                e.Property(i => i.ValorUnitario)
+                 .HasPrecision(18, 2)
+                 .IsRequired();
+
+                e.HasOne(i => i.Pedido)
+                 .WithMany(p => p.Itens)
+                 .HasForeignKey(i => i.PedidoId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasOne(i => i.Produto)
+                 .WithMany()
+                 .HasForeignKey(i => i.ProdutoId)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
         }
+
     }
+
 }

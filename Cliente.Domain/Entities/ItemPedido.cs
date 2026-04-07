@@ -1,21 +1,25 @@
 ﻿using Cliente.Domain.Models;
 
-public class ItemPedido:BaseEntities
+public class ItemPedido : BaseEntities
 {
-    public ItemPedido(int produtoId, int quantidade, decimal valorUnitario, Produto produto)
+    protected ItemPedido() { } // EF
+
+    public ItemPedido(int produtoId, int quantidade, decimal valorUnitario)
     {
         ProdutoId = produtoId;
-        Produto = produto;
+        
         Quantidade = quantidade;
         ValorUnitario = valorUnitario;
     }
 
     public int ProdutoId { get; private set; }
     public Produto Produto { get; private set; }
+
+    public int PedidoId { get; private set; }
+    public Pedido Pedido { get; private set; } // ✔ CORRETO
+
     public int Quantidade { get; private set; }
     public decimal ValorUnitario { get; private set; }
-
-   
 
     public void AdicionarQuantidade(int quantidade)
     {
@@ -25,10 +29,7 @@ public class ItemPedido:BaseEntities
         Quantidade += quantidade;
     }
 
-    public decimal Total()
-    {
-        return Quantidade * ValorUnitario;
-    }
+    public decimal Total() => Quantidade * ValorUnitario;
 
     public void AtualizarQuantidade(int quantidade)
     {
@@ -44,6 +45,4 @@ public class ItemPedido:BaseEntities
         Produto = produto;
         ValorUnitario = valorUnitario;
     }
-
-
 }

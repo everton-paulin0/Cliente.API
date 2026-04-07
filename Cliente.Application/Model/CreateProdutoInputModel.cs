@@ -15,8 +15,7 @@ namespace Cliente.Application.Model
         public string MarcaProduto { get; set; }
         public int Quantidade { get; set; }
         public decimal ValorUnitario { get; set; }
-        public int PedidoId { get; set; }
-        public Pedido Pedido { get; set; }
+        
 
 
         public Produto ToEntityProduto()
