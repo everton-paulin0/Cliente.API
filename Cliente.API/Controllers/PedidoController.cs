@@ -47,9 +47,12 @@ namespace Cliente.API.Controllers
                 return BadRequest(result);
 
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
+
+
+
         }
 
-        
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -72,6 +75,17 @@ namespace Cliente.API.Controllers
                 return BadRequest(result);
 
             return Ok(result);
+        }
+
+        [HttpDelete("{pedidoId}/itens/{produtoId}")]
+        public IActionResult RemoverItem(int pedidoId, int produtoId)
+        {
+            var result = _services.RemoverItem(pedidoId, produtoId);
+
+            if (!result.IsSucess)
+                return BadRequest(result.Message);
+
+            return Ok();
         }
     }
 }

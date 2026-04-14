@@ -1,32 +1,39 @@
-﻿using Cliente.Domain.Models;
+﻿using Cliente.Application.Model;
+using Cliente.Domain.Models;
 
-namespace Cliente.Application.Model
+public class PedidoViewModel
 {
-    public class PedidoViewModel
+    public int Id { get; private set; }
+    public string Cliente { get; private set; }
+    public string Vendedor { get; private set; }
+    public string StatusVenda { get; private set; }
+    public decimal Total { get; private set; }
+
+    public List<ItemPedidoViewModel> Itens { get; private set; }
+
+    public PedidoViewModel(
+        int id,
+        string cliente,
+        string vendedor,
+        string statusVenda,
+        decimal total,
+        List<ItemPedidoViewModel> itens)
     {
-        public PedidoViewModel(int id, int clientId, int vendedorId, string statusVenda, List<PedidoItemViewModel> itens)
-        {
-            Id = id;
-            ClientId = clientId;
-            VendedorId = vendedorId;
-            StatusVenda = statusVenda;
-            Itens = itens;
-        }
-
-        public int Id { get; set; }
-        public int ClientId { get; set; }
-        public int VendedorId { get; set; }
-        public string StatusVenda { get; set; }
-
-        public List<PedidoItemViewModel> Itens { get; set; } = new();
-
-        public static PedidoViewModel FromEntity(Pedido entity)
-            => new PedidoViewModel(
-                entity.Id,
-                entity.ClientId,
-                entity.VendedorId,
-                entity.StatusVenda.ToString(),
-                entity.Itens.Select(PedidoItemViewModel.ItemPedidoFromEntity).ToList()
-            );
+        Id = id;
+        Cliente = cliente;
+        Vendedor = vendedor;
+        StatusVenda = statusVenda;
+        Total = total;
+        Itens = itens;
     }
+
+    public static PedidoViewModel FromEntity(Pedido pedido)
+        => new PedidoViewModel(
+            pedido.Id,
+            pedido.Cliente.NomeCliente,
+            pedido.Vendedor.NomeVendedor,
+            pedido.StatusVenda.ToString(),
+            pedido.GetTotal(),
+            pedido.Itens.Select(ItemPedidoViewModel.ItemPedidoFromEntity).ToList()
+        );
 }

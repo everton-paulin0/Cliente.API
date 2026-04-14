@@ -6,8 +6,16 @@ public class ItemPedido : BaseEntities
 
     public ItemPedido(int produtoId, int quantidade, decimal valorUnitario)
     {
+        if (produtoId <= 0)
+            throw new Exception("Produto inválido");
+
+        if (quantidade <= 0)
+            throw new Exception("Quantidade inválida");
+
+        if (valorUnitario <= 0)
+            throw new Exception("Valor inválido");
+
         ProdutoId = produtoId;
-        
         Quantidade = quantidade;
         ValorUnitario = valorUnitario;
     }
@@ -41,8 +49,12 @@ public class ItemPedido : BaseEntities
 
     public void AtualizarProduto(int produtoId, Produto produto, decimal valorUnitario)
     {
+        if (produto == null)
+            throw new Exception("Produto inválido");
+
         ProdutoId = produtoId;
         Produto = produto;
         ValorUnitario = valorUnitario;
     }
 }
+

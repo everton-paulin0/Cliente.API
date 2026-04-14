@@ -64,7 +64,8 @@ namespace Cliente.Domain.Models
             if (quantidade <= 0)
                 throw new Exception("Quantidade inválida");
 
-            produto.BaixarEstoque(quantidade);
+            if (produto.Quantidade < quantidade)
+                throw new Exception("Estoque insuficiente");
 
             var item = Itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
 
@@ -80,11 +81,29 @@ namespace Cliente.Domain.Models
                     produto.ValorUnitario
                 ));
             }
+
+            // 🔥 MOVER PRA CÁ
+            produto.BaixarEstoque(quantidade);
         }
 
         public decimal GetTotal()
             => Itens.Sum(i => i.Total());
 
+        public void RemoverItem(int produtoId)
+        {
+            var item = Itens.FirstOrDefault(i => i.ProdutoId == produtoId);
+
+            if (item == null)
+                throw new Exception($"Produto {produtoId} não existe no pedido");
+
+            if (item.Produto == null)
+                throw new Exception("Produto não carregado");
+
+            // devolve estoque
+            item.Produto.Quantidade += item.Quantidade;
+
+            Itens.Remove(item);
+        }
     }
 
 }

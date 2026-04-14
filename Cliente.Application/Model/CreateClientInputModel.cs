@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Cliente.Domain.Models;
 using Cliente.Domain.Models.Enum;
 
@@ -22,6 +16,6 @@ namespace Cliente.Application.Model
         public Estados Estado { get; set; }
 
         public Client ToEntityClient()
-            => new Client(NomeCliente, NumeroDocumento, Endereco, Numero, Complemento, Cidade, Estado);
+            => new Client(NomeCliente, NumeroDocumento, Endereco, Numero, Complemento, Cidade.ToString(), Estado);
     }
 }

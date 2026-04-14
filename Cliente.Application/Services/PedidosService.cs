@@ -1,5 +1,6 @@
 ﻿using Cliente.Application.Model;
 using Cliente.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cliente.Application.Services
 {
@@ -31,16 +32,19 @@ namespace Cliente.Application.Services
         public ResultViewModel<List<PedidoViewModel>> GetAll(string search = "")
         {
             var pedidos = _context.Pedidos
-                .Where(c => c.IsActive)
+                .Include(p => p.Cliente)
+                .Include(p => p.Vendedor)
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.Produto)
+                .Where(p => p.IsActive)
                 .ToList();
 
             var model = pedidos
-                .Select(p => PedidoViewModel.FromEntity(p))
+                .Select(PedidoViewModel.FromEntity)
                 .ToList();
 
             return ResultViewModel<List<PedidoViewModel>>.Success(model);
         }
-
         public ResultViewModel<PedidoViewModel> GetById(int id)
         {
             var pedido = _context.Pedidos.SingleOrDefault(p => p.Id == id && p.IsActive);
@@ -75,6 +79,22 @@ namespace Cliente.Application.Services
             return ResultViewModel<int>.Success(pedido.Id);
         }
 
+        public ResultViewModel RemoverItem(int pedidoId, int produtoId)
+        {
+            var pedido = _context.Pedidos
+            .Include(p => p.Itens)
+            .ThenInclude(i => i.Produto)
+            .FirstOrDefault(p => p.Id == pedidoId);
+
+            if (pedido == null)
+                return ResultViewModel.Error("Pedido não encontrado");
+
+            pedido.RemoverItem(produtoId);
+
+            _context.SaveChanges();
+
+            return ResultViewModel.Success();
+        }
 
         public ResultViewModel UpdatePedido(UpdatePedidoInputModel model)
         {

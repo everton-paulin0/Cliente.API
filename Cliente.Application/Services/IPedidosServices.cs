@@ -9,7 +9,7 @@ namespace Cliente.Application.Services
         ResultViewModel<int> Insert(CreatePedidoInputModel model);
         ResultViewModel UpdatePedido(UpdatePedidoInputModel model);
         ResultViewModel Delete(int id);
-
+        ResultViewModel RemoverItem(int pedidoId, int produtoId);
     }
 }
 

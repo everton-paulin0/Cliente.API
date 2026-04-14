@@ -9,25 +9,27 @@ namespace Cliente.Application.Model
 {
     public class ItemPedidoViewModel
     {
-        public ItemPedidoViewModel(int produtoId, Produto produto,int pedidoId, Pedido pedido, int quantidade, decimal valorUnitario)
+        public ItemPedidoViewModel(string produto, int quantidade, decimal valorUnitario, decimal total)
         {
-            ProdutoId = produtoId;
             Produto = produto;
-            PedidoId = pedidoId;
-            Pedido = pedido;
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
+            Total = total;
         }
 
-        public int ProdutoId { get; private set; }
-        Produto Produto { get; set; }
-        public int PedidoId { get; private set; }
-        Pedido Pedido { get; set; }
+        public string Produto { get; private set; }
         public int Quantidade { get; private set; }
         public decimal ValorUnitario { get; private set; }
+        public decimal Total { get; private set; }
 
         public static ItemPedidoViewModel ItemPedidoFromEntity(ItemPedido entity)
-           => new ItemPedidoViewModel(entity.ProdutoId, entity.Produto,entity.PedidoId, entity.Pedido, entity.Quantidade, entity.ValorUnitario);
-
+            => new ItemPedidoViewModel(
+                entity.Produto.NomeProduto,
+                entity.Quantidade,
+                entity.ValorUnitario,
+                entity.Total()
+            );
     }
 }
+
+

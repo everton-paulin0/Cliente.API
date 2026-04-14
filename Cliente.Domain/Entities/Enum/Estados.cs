@@ -15,7 +15,7 @@ namespace Cliente.Domain.Models.Enum
         AL,
         [Description("Amapá")]
         AP,
-        [Description("Amkazonas")]
+        [Description("Amazonas")]
         AM,
         [Description("Bahia")]
         BA,

@@ -52,5 +52,7 @@ namespace Cliente.Domain.Models
 
             Quantidade -= quantidade;
         }
+
+
     }
 }

@@ -16,16 +16,16 @@ namespace Cliente.API.Controllers
             _services = services;
         }
 
-        [HttpGet]
-        public IActionResult GetAll([FromQuery] string search = "")
-        {
-            var result = _services.GetAll(search);
+        //[HttpGet]
+        //public IActionResult GetAll([FromQuery] string search = "")
+        //{
+        //    var result = _services.GetAll(search);
 
-            if (!result.IsSucess)
-                return BadRequest(result);
+        //    if (!result.IsSucess)
+        //        return BadRequest(result);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -38,16 +38,16 @@ namespace Cliente.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] CreateItemPedidoInputModel model)
-        {
-            var result = _services.Insert(model);
+        //[HttpPost]
+        //public IActionResult Post([FromBody] CreateItemPedidoInputModel model)
+        //{
+        //    var result = _services.Insert(model);
 
-            if (!result.IsSucess)
-                return BadRequest(result);
+        //    if (!result.IsSucess)
+        //        return BadRequest(result);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
-        }
+        //    return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
+        //}
 
 
         [HttpDelete("{id}")]
@@ -61,18 +61,18 @@ namespace Cliente.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UpdateItemPedidoInputModel model)
-        {
-            model.IdItemPedido = id;
+        //[HttpPut("{id}")]
+        //public IActionResult Put(int id, [FromBody] UpdateItemPedidoInputModel model)
+        //{
+        //    model.IdItemPedido = id;
 
-            var result = _services.UpdatePedido(model);
+        //    var result = _services.UpdatePedido(model);
 
-            if (!result.IsSucess)
-                return BadRequest(result);
+        //    if (!result.IsSucess)
+        //        return BadRequest(result);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        ////}
     }
 }
 

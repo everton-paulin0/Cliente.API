@@ -37,7 +37,15 @@ namespace Cliente.Infrastructure
                  .WithMany(v => v.Pedidos)
                  .HasForeignKey(m => m.VendedorId)
                  .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasMany(p => p.Itens)
+                  .WithOne(i => i.Pedido)
+                  .HasForeignKey(i => i.PedidoId)
+                  .OnDelete(DeleteBehavior.Cascade);
             });
+
+            
+                
 
             // =========================
             // CLIENT
