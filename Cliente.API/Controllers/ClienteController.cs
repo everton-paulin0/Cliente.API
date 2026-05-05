@@ -20,7 +20,7 @@ namespace Cliente.API.Controllers
         {
             var result = _services.GetAll(search);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return BadRequest(result);
 
             return Ok(result);
@@ -31,7 +31,7 @@ namespace Cliente.API.Controllers
         {
             var result = _services.GetById(id);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return NotFound(result.Message);
 
             return Ok(result);
@@ -42,7 +42,7 @@ namespace Cliente.API.Controllers
         {
             var result = _services.Insert(model);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return BadRequest(result);
 
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
@@ -55,7 +55,7 @@ namespace Cliente.API.Controllers
 
             var result = _services.Update(model);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return BadRequest(result);
 
             return Ok(result);
@@ -66,7 +66,7 @@ namespace Cliente.API.Controllers
         {
             var result = _services.Delete(id);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return NotFound(result);
 
             return Ok(result);

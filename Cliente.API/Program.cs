@@ -18,6 +18,7 @@ builder.Services.AddScoped<IPedidosServices, PedidosService>();
 builder.Services.AddScoped<IProdutosServices, ProdutosServices>();
 builder.Services.AddScoped<IVendedorServices, VendedorServices>();
 builder.Services.AddScoped<IItemPedidoServices, ItemPedidoServices>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -10,11 +10,11 @@ namespace Cliente.Application.Model
     {
         public ResultViewModel(bool isSucess = true, string message = "")
         {
-            IsSucess = isSucess;
+            IsSuccess = isSucess;
             Message = message;
         }
 
-        public bool IsSucess { get; set; }
+        public bool IsSuccess { get; set; }
         public string Message { get; set; }
 
         public static ResultViewModel Success(string message="")
@@ -25,7 +25,7 @@ namespace Cliente.Application.Model
 
     public class ResultViewModel<T> : ResultViewModel
     {
-        public ResultViewModel(T? data, bool isSucess = true, string message = "") : base(isSucess, message)
+        public ResultViewModel(T? data, bool isSuccess = true, string message = "") : base(isSuccess, message)
         {
             Data = data;
 
@@ -40,8 +40,5 @@ namespace Cliente.Application.Model
             => new(default, false, message);
 
     }
-
-
-
 
 }

@@ -70,6 +70,10 @@ namespace Cliente.Application.Services
                 if (produto == null)
                     return ResultViewModel<int>.Error($"Produto {item.ProdutoId} não encontrado");
 
+                if (produto.Quantidade < item.Quantidade)
+                    return ResultViewModel<int>.Error($"Estoque insuficiente para {produto.NomeProduto}");
+
+                // 🔥 valor vem do banco (nunca do front)
                 pedido.AdicionarProduto(produto, item.Quantidade);
             }
 

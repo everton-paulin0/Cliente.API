@@ -16,63 +16,27 @@ namespace Cliente.API.Controllers
             _services = services;
         }
 
-        //[HttpGet]
-        //public IActionResult GetAll([FromQuery] string search = "")
-        //{
-        //    var result = _services.GetAll(search);
-
-        //    if (!result.IsSucess)
-        //        return BadRequest(result);
-
-        //    return Ok(result);
-        //}
-
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _services.GetById(id);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return NotFound(result.Message);
 
             return Ok(result);
         }
-
-        //[HttpPost]
-        //public IActionResult Post([FromBody] CreateItemPedidoInputModel model)
-        //{
-        //    var result = _services.Insert(model);
-
-        //    if (!result.IsSucess)
-        //        return BadRequest(result);
-
-        //    return CreatedAtAction(nameof(GetById), new { id = result.Data }, result);
-        //}
-
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             var result = _services.Delete(id);
 
-            if (!result.IsSucess)
+            if (!result.IsSuccess)
                 return NotFound(result);
 
             return Ok(result);
         }
-
-        //[HttpPut("{id}")]
-        //public IActionResult Put(int id, [FromBody] UpdateItemPedidoInputModel model)
-        //{
-        //    model.IdItemPedido = id;
-
-        //    var result = _services.UpdatePedido(model);
-
-        //    if (!result.IsSucess)
-        //        return BadRequest(result);
-
-        //    return Ok(result);
-        ////}
     }
 }
 
