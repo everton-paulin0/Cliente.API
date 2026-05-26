@@ -1,6 +1,6 @@
 ﻿using Cliente.Application.Model;
 using Cliente.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Cliente.Application.Services
 {
@@ -45,9 +45,11 @@ namespace Cliente.Application.Services
 
             var totalVendas = itens.Sum(i => i.Quantidade * i.ValorUnitario);
 
-            var ticketMedio = totalPedidos > 0
-                ? totalVendas / totalPedidos
-                : 0;
+            var ticketMedio = totalPedidos == 0
+                ? 0:
+                totalVendas / totalPedidos;
+
+
 
             // ✅ RANKINGS
 
@@ -63,6 +65,10 @@ namespace Cliente.Application.Services
                 .Take(5)
                 .ToList();
 
+            var produtoMaisVendido = rankingProdutos
+                .OrderByDescending(x => x.TotalVendido)
+                .FirstOrDefault()?.Nome;
+
             var rankingVendedores = pedidosFiltrados
                 .GroupBy(p => p.Vendedor.NomeVendedor)
                 .Select(g => new RankingVendedorViewModel
@@ -76,19 +82,163 @@ namespace Cliente.Application.Services
                 .Take(5)
                 .ToList();
 
+
+            var vendasPeriodo = _context.Pedidos
+                .Where(p => p.IsActive)
+                .GroupBy(p => new
+                {
+                    p.CreatedAt.Year,
+                    p.CreatedAt.Month
+                })
+                .Select(g => new
+                {
+                    g.Key.Year,
+                    g.Key.Month,
+
+                    TotalVendas = g
+                        .SelectMany(p => p.Itens)
+                        .Sum(i => i.Quantidade * i.ValorUnitario)
+                })
+                .ToList()
+                .Select(x => new VendasPeriodoViewModel
+                {
+                    Periodo = $"{x.Year}-{x.Month:D2}",
+
+                    TotalVendas = x.TotalVendas
+                })
+                .OrderBy(x => x.Periodo)
+                .ToList();
+
+
+
+            // =============================
+            // COMPARATIVO DE VENDAS
+            // =============================
+
+            var inicioMesAtual =
+                new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+            var inicioMesAnterior =
+                inicioMesAtual.AddMonths(-1);
+
+            var fimMesAnterior =
+                inicioMesAtual.AddDays(-1);
+
+            var melhorVendedor = rankingVendedores.FirstOrDefault()?.Vendedor;
+
+            // TOTAL MÊS ATUAL
+
+            var atual = _context.ItemPedidos
+                .Where(i =>
+                    i.Pedido.CreatedAt >= inicioMesAtual &&
+                    i.Pedido.IsActive)
+                .Sum(i => i.Quantidade * i.ValorUnitario);
+
+            // TOTAL MÊS ANTERIOR
+
+            var anterior = _context.ItemPedidos
+                .Where(i =>
+                    i.Pedido.CreatedAt >= inicioMesAnterior &&
+                    i.Pedido.CreatedAt <= fimMesAnterior &&
+                    i.Pedido.IsActive)
+                .Sum(i => i.Quantidade * i.ValorUnitario);
+
+            // CRESCIMENTO %
+
+            var crescimento = anterior == 0
+                ? 100
+                : ((atual - anterior) / anterior) * 100;
+
+            // =============================
+            // COMPARATIVO PEDIDOS
+            // =============================
+
+            var pedidosAtual = _context.Pedidos
+                .Count(p =>
+                    p.CreatedAt >= inicioMesAtual &&
+                    p.IsActive);
+
+            var pedidosAnterior = _context.Pedidos
+                .Count(p =>
+                    p.CreatedAt >= inicioMesAnterior &&
+                    p.CreatedAt <= fimMesAnterior &&
+                    p.IsActive);
+
+            var crescimentoPedidos =
+                pedidosAnterior == 0
+                ? 100
+                : ((decimal)(pedidosAtual - pedidosAnterior)
+                    / pedidosAnterior) * 100;
+
+
+            // =============================
+            // COMPARATIVO TICKET MÉDIO
+            // =============================
+
+            var ticketAtual =
+                pedidosAtual == 0
+                ? 0
+                : atual / pedidosAtual;
+
+            var ticketAnterior =
+                pedidosAnterior == 0
+                ? 0
+                : anterior / pedidosAnterior;
+
+            var crescimentoTicket =
+                ticketAnterior == 0
+                ? 100
+                : ((ticketAtual - ticketAnterior)
+                    / ticketAnterior) * 100;
+
+
+
             var model = new DashboardViewModel
             {
                 TotalVendas = totalVendas,
+
                 TotalPedidos = totalPedidos,
+
                 TotalProdutosVendidos = totalProdutosVendidos,
+
                 TicketMedio = ticketMedio,
+
+                MelhorVendedor = melhorVendedor,
+
+                ProdutoMaisVendido = produtoMaisVendido,
+
                 RankingProdutos = rankingProdutos,
-                RankingVendedores = rankingVendedores
+
+                RankingVendedores = rankingVendedores,
+
+                ComparativoVendas = new ComparativoViewModel
+                {
+                    Atual = atual,
+                    Anterior = anterior,
+                    CrescimentoPercentual = crescimento
+                },
+
+                VendasPeriodo = vendasPeriodo,
+
+
+                ComparativoPedidos = new ComparativoViewModel
+                {
+                    Atual = pedidosAtual,
+                    Anterior = pedidosAnterior,
+                    CrescimentoPercentual = crescimentoPedidos
+                },
+
+                ComparativoTicketMedio = new ComparativoViewModel
+                {
+                    Atual = ticketAtual,
+                    Anterior = ticketAnterior,
+                    CrescimentoPercentual = crescimentoTicket
+                },
             };
 
             return ResultViewModel<DashboardViewModel>.Success(model);
+
         }
-    }
-    
+    }    
 }
 

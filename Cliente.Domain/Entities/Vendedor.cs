@@ -33,5 +33,7 @@ namespace Cliente.Domain.Models
             NomeVendedor = nomeVendedor;           
             UpdatedAt = DateTime.Now;
         }
+
+
     }
 }

@@ -13,8 +13,17 @@ namespace Cliente.Application.Model
         public int TotalPedidos { get; set; }
         public int TotalProdutosVendidos { get; set; }
         public decimal TicketMedio { get; set; }
+        public string MelhorVendedor { get; set; }
+        public string ProdutoMaisVendido { get; set; }
+        public decimal CrescimentoMensal { get; set; }
+
         public List<RankingProdutoViewModel> RankingProdutos { get; set; } = new();
         public List<RankingVendedorViewModel> RankingVendedores { get; set; } = new();
+        public ComparativoViewModel ComparativoVendas { get; set; }
+        public ComparativoViewModel ComparativoPedidos { get; set; }
+        public ComparativoViewModel ComparativoTicketMedio { get; set; }
+        public List<VendasPeriodoViewModel> VendasPeriodo { get; set; }
+
     }
 }
 
