@@ -24,6 +24,8 @@ namespace Cliente.Application.Model
         public ComparativoViewModel ComparativoTicketMedio { get; set; }
         public List<VendasPeriodoViewModel> VendasPeriodo { get; set; }
 
+        public List<ComparativoVendedorViewModel> ComparativoVendedores { get; set; }
+
     }
 }
 

@@ -41,15 +41,13 @@ namespace Cliente.Application.Services
 
             var totalPedidos = pedidosFiltrados.Count();
 
-            var totalProdutosVendidos = itens.Sum(i => i.Quantidade);
+            //var totalProdutosVendidos = itens.Sum(i => i.Quantidade);
+
+            var totalProdutosVendidos = itens.Any()? itens.Sum(i => i.Quantidade): 0;
 
             var totalVendas = itens.Sum(i => i.Quantidade * i.ValorUnitario);
 
-            var ticketMedio = totalPedidos == 0
-                ? 0:
-                totalVendas / totalPedidos;
-
-
+            var ticketMedio = totalPedidos == 0 ? 0: totalVendas / totalPedidos;
 
             // ✅ RANKINGS
 
@@ -83,8 +81,7 @@ namespace Cliente.Application.Services
                 .ToList();
 
 
-            var vendasPeriodo = _context.Pedidos
-                .Where(p => p.IsActive)
+            var vendasPeriodo = pedidosFiltrados
                 .GroupBy(p => new
                 {
                     p.CreatedAt.Year,
@@ -103,7 +100,6 @@ namespace Cliente.Application.Services
                 .Select(x => new VendasPeriodoViewModel
                 {
                     Periodo = $"{x.Year}-{x.Month:D2}",
-
                     TotalVendas = x.TotalVendas
                 })
                 .OrderBy(x => x.Periodo)
