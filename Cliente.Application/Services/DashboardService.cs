@@ -120,6 +120,13 @@ namespace Cliente.Application.Services
             var fimMesAnterior =
                 inicioMesAtual.AddDays(-1);
 
+            var mediaHistorica = vendasPeriodo
+                .Average(x => x.TotalVendas);
+
+            var ultimoMes = vendasPeriodo
+                .OrderByDescending(x => x.Periodo)
+                .FirstOrDefault()?.TotalVendas ?? 0;
+
             var melhorVendedor = rankingVendedores.FirstOrDefault()?.Vendedor;
 
             // TOTAL MÊS ATUAL
@@ -138,6 +145,54 @@ namespace Cliente.Application.Services
                     i.Pedido.CreatedAt <= fimMesAnterior &&
                     i.Pedido.IsActive)
                 .Sum(i => i.Quantidade * i.ValorUnitario);
+
+            var comparativoVendedores = _context.Pedidos
+                .Where(p => p.IsActive)
+                .GroupBy(p => p.Vendedor.NomeVendedor)
+                .Select(g => new ComparativoVendedorViewModel
+                {
+                    Vendedor = g.Key,
+
+                    Atual = g.Where(p =>
+                            p.CreatedAt >= inicioMesAtual)
+                        .SelectMany(p => p.Itens)
+                        .Sum(i => i.Quantidade * i.ValorUnitario),
+
+                    Anterior = g.Where(p =>
+                            p.CreatedAt >= inicioMesAnterior &&
+                            p.CreatedAt <= fimMesAnterior)
+                        .SelectMany(p => p.Itens)
+                        .Sum(i => i.Quantidade * i.ValorUnitario)
+                })
+                .ToList();
+
+            var comparativoProdutos = _context.ItemPedidos
+                .Where(i => i.Pedido.IsActive)
+                .GroupBy(i => i.Produto.NomeProduto)
+                .Select(g => new ComparativoProdutoViewModel
+                {
+                    Produto = g.Key,
+
+                    Atual = g.Where(i =>
+                            i.Pedido.CreatedAt >= inicioMesAtual)
+                        .Sum(i => i.Quantidade * i.ValorUnitario),
+
+                    Anterior = g.Where(i =>
+                            i.Pedido.CreatedAt >= inicioMesAnterior &&
+                            i.Pedido.CreatedAt <= fimMesAnterior)
+                        .Sum(i => i.Quantidade * i.ValorUnitario)
+                })
+                .ToList();
+
+                foreach (var produto in comparativoProdutos)
+                {
+                    produto.CrescimentoPercentual =
+                        produto.Anterior == 0
+                            ? 100
+                            : ((produto.Atual - produto.Anterior)
+                                / produto.Anterior) * 100;
+                }
+            
 
             // CRESCIMENTO %
 
@@ -165,6 +220,24 @@ namespace Cliente.Application.Services
                 ? 100
                 : ((decimal)(pedidosAtual - pedidosAnterior)
                     / pedidosAnterior) * 100;
+
+
+            //TENDÊNCIAS
+
+            var tendencias = new List<TendenciaViewModel>
+{
+                new()
+                {
+                    Indicador = "Vendas",
+
+                    MediaPeriodo = mediaHistorica,
+
+                    UltimoPeriodo = ultimoMes,
+
+                    TendenciaAlta =
+                        ultimoMes >= mediaHistorica
+                }
+            };
 
 
             // =============================
@@ -199,6 +272,8 @@ namespace Cliente.Application.Services
 
                 TicketMedio = ticketMedio,
 
+                Tendencias = tendencias,
+
                 MelhorVendedor = melhorVendedor,
 
                 ProdutoMaisVendido = produtoMaisVendido,
@@ -206,6 +281,11 @@ namespace Cliente.Application.Services
                 RankingProdutos = rankingProdutos,
 
                 RankingVendedores = rankingVendedores,
+
+                ComparativoProdutos = comparativoProdutos,
+
+                ComparativoVendedores = comparativoVendedores,
+                
 
                 ComparativoVendas = new ComparativoViewModel
                 {
