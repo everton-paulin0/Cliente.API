@@ -166,25 +166,29 @@ namespace Cliente.Application.Services
                 })
                 .ToList();
 
-            var comparativoProdutos = _context.ItemPedidos
-                .Where(i => i.Pedido.IsActive)
-                .GroupBy(i => i.Produto.NomeProduto)
-                .Select(g => new ComparativoProdutoViewModel
+            var comparativoProdutos = rankingProdutos
+                .Select(p => new ComparativoProdutoViewModel
                 {
-                    Produto = g.Key,
+                    Produto = p.Nome,
 
-                    Atual = g.Where(i =>
-                            i.Pedido.CreatedAt >= inicioMesAtual)
+                    Atual = _context.ItemPedidos
+                        .Where(i =>
+                            i.Produto.NomeProduto == p.Nome &&
+                            i.Pedido.CreatedAt >= inicioMesAtual &&
+                            i.Pedido.IsActive)
                         .Sum(i => i.Quantidade * i.ValorUnitario),
 
-                    Anterior = g.Where(i =>
+                    Anterior = _context.ItemPedidos
+                        .Where(i =>
+                            i.Produto.NomeProduto == p.Nome &&
                             i.Pedido.CreatedAt >= inicioMesAnterior &&
-                            i.Pedido.CreatedAt <= fimMesAnterior)
+                            i.Pedido.CreatedAt <= fimMesAnterior &&
+                            i.Pedido.IsActive)
                         .Sum(i => i.Quantidade * i.ValorUnitario)
                 })
                 .ToList();
 
-                foreach (var produto in comparativoProdutos)
+            foreach (var produto in comparativoProdutos)
                 {
                     produto.CrescimentoPercentual =
                         produto.Anterior == 0
@@ -310,9 +314,67 @@ namespace Cliente.Application.Services
                     Anterior = ticketAnterior,
                     CrescimentoPercentual = crescimentoTicket
                 },
+
+
             };
 
+            var comparativoVendedores = rankingVendedores
+                .Select(v => new ComparativoVendedorViewModel
+                {
+                    Vendedor = v.Vendedor,
+
+                    Atual = _context.Pedidos
+                        .Where(p =>
+                            p.Vendedor.NomeVendedor == v.Vendedor &&
+                            p.CreatedAt >= inicioMesAtual &&
+                            p.IsActive)
+                        .SelectMany(p => p.Itens)
+                        .Sum(i => i.Quantidade * i.ValorUnitario),
+
+                    Anterior = _context.Pedidos
+                        .Where(p =>
+                            p.Vendedor.NomeVendedor == v.Vendedor &&
+                            p.CreatedAt >= inicioMesAnterior &&
+                            p.CreatedAt <= fimMesAnterior &&
+                            p.IsActive)
+                        .SelectMany(p => p.Itens)
+                        .Sum(i => i.Quantidade * i.ValorUnitario)
+                })
+                .ToList();
+
+            foreach (var vendedor in comparativoVendedores)
+            {
+                vendedor.CrescimentoPercentual =
+                    vendedor.Anterior == 0
+                        ? 100
+                        : ((vendedor.Atual - vendedor.Anterior)
+                            / vendedor.Anterior) * 100;
+            }
+
             return ResultViewModel<DashboardViewModel>.Success(model);
+
+            // =============================
+            // MÉDIA PERIODO
+            // =============================
+
+            var mediaPeriodo =
+                vendasPeriodo.Any()
+                    ? vendasPeriodo.Average(x => x.TotalVendas)
+                    : 0;
+
+                        var ultimoPeriodo =
+                            vendasPeriodo.LastOrDefault()?.TotalVendas ?? 0;
+
+                        var tendencias = new List<TendenciaViewModel>
+            {
+                new()
+                {
+                    Indicador = "Vendas",
+                    MediaPeriodo = mediaPeriodo,
+                    UltimoPeriodo = ultimoPeriodo,
+                    TendenciaAlta = ultimoPeriodo >= mediaPeriodo
+                }
+            };
 
         }
     }    

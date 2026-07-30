@@ -32,7 +32,7 @@ namespace Cliente.API.Controllers
             var result = _services.GetById(id);
 
             if (!result.IsSuccess)
-                return NotFound(result.Message);
+                return NotFound(result);
 
             return Ok(result);
         }

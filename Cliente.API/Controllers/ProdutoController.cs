@@ -6,7 +6,7 @@ namespace Cliente.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProdutoController : Controller
+    public class ProdutoController : ControllerBase
     {
         private readonly IProdutosServices _services;
         public ProdutoController(IProdutosServices services)
@@ -31,7 +31,7 @@ namespace Cliente.API.Controllers
             var result = _services.GetById(id);
 
             if (!result.IsSuccess)
-                return NotFound(result.Message);
+                return NotFound(result);
 
             return Ok(result);
         }

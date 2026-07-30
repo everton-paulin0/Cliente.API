@@ -7,7 +7,7 @@ namespace Cliente.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PedidoController : Controller
+    public class PedidoController : ControllerBase
     {
         private readonly IPedidosServices _services;
         public PedidoController(IPedidosServices services)
@@ -33,7 +33,7 @@ namespace Cliente.API.Controllers
             var result = _services.GetById(id);
 
             if (!result.IsSuccess)
-                return NotFound(result.Message);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -83,7 +83,7 @@ namespace Cliente.API.Controllers
             var result = _services.RemoverItem(pedidoId, produtoId);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok();
         }

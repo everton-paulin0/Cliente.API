@@ -6,7 +6,7 @@ namespace Cliente.API.Controllers
 {
     [ApiController]
     [Route("api/dashboard")]
-    public class DashboardController : Controller
+    public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _service;
 
@@ -21,7 +21,7 @@ namespace Cliente.API.Controllers
             var result = _service.GetDashboard(filtro);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok(result.Data);
         }

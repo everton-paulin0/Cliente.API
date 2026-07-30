@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // DbContext
 
 
-var connectionString = builder.Configuration.GetConnectionString("ClienteDB");
+var connectionString = builder.Configuration.GetConnectionString("ClienteDb");
 
 builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
 
