@@ -1,3 +1,4 @@
+using Cliente.API.Midleware;
 using Cliente.Application.Services;
 using Cliente.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ builder.Services.AddScoped<IProdutosServices, ProdutosServices>();
 builder.Services.AddScoped<IVendedorServices, VendedorServices>();
 builder.Services.AddScoped<IItemPedidoServices, ItemPedidoServices>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IDateTimeService, DateTimeService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -31,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

@@ -1,5 +1,7 @@
-﻿using Cliente.Application.Model;
+﻿using Cliente.Application.Constants;
+using Cliente.Application.Model;
 using Cliente.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Cliente.Application.Services
@@ -7,10 +9,12 @@ namespace Cliente.Application.Services
     public class DashboardService : IDashboardService
     {
         private readonly AppDbContext _context;
+        private readonly IDateTimeService _dateTimeService;
 
-        public DashboardService(AppDbContext context)
+        public DashboardService(AppDbContext context, IDateTimeService dateTimeService)
         {
             _context = context;
+            _dateTimeService = dateTimeService;
         }
         public ResultViewModel<DashboardViewModel> GetDashboard(DashboardFiltroInputModel filtro)
         {
@@ -18,13 +22,20 @@ namespace Cliente.Application.Services
             // ✅ VALIDAÇÕES 
             if (filtro.DataInicio.HasValue && filtro.DataFim.HasValue)
             {
+
+                if ((filtro.DataFim - filtro.DataInicio).Value.TotalDays >
+                DashboardConstants.MaximoDiasConsulta)
+                            {
+                                return ResultViewModel<DashboardViewModel>.Error(
+                        $"Período máximo permitido é de {DashboardConstants.MaximoDiasConsulta} dias");
+                }
                 if (filtro.DataFim < filtro.DataInicio)
                     return ResultViewModel<DashboardViewModel>.Error("DataFim não pode ser menor que DataInicio");
 
-                if ((filtro.DataFim - filtro.DataInicio).Value.TotalDays > 365)
-                    return ResultViewModel<DashboardViewModel>.Error("Período máximo permitido é de 1 ano");
+                //if ((filtro.DataFim - filtro.DataInicio).Value.TotalDays > 365)
+                //    return ResultViewModel<DashboardViewModel>.Error("Período máximo permitido é de 1 ano");
             }
-            var pedidos = _context.Pedidos.AsQueryable();
+            var pedidos = _context.Pedidos.AsNoTracking().AsQueryable();
 
             if (filtro.DataInicio.HasValue)
                 pedidos = pedidos.Where(p => p.CreatedAt >= filtro.DataInicio.Value);
@@ -37,6 +48,7 @@ namespace Cliente.Application.Services
             var pedidosIds = pedidosFiltrados.Select(p => p.Id).ToList();
 
             var itens = _context.ItemPedidos
+                .AsNoTracking()
                 .Where(i => pedidosIds.Contains(i.PedidoId));
 
             var totalPedidos = pedidosFiltrados.Count();
@@ -80,8 +92,8 @@ namespace Cliente.Application.Services
                 .Take(5)
                 .ToList();
 
-
-            var vendasPeriodo = pedidosFiltrados
+            var vendasPeriodo = _context.Pedidos
+                .Where(p => p.IsActive)
                 .GroupBy(p => new
                 {
                     p.CreatedAt.Year,
@@ -104,6 +116,31 @@ namespace Cliente.Application.Services
                 })
                 .OrderBy(x => x.Periodo)
                 .ToList();
+
+
+            //var vendasPeriodo = pedidosFiltrados
+            //    .GroupBy(p => new
+            //    {
+            //        p.CreatedAt.Year,
+            //        p.CreatedAt.Month
+            //    })
+            //    .Select(g => new
+            //    {
+            //        g.Key.Year,
+            //        g.Key.Month,
+
+            //        TotalVendas = g
+            //            .SelectMany(p => p.Itens)
+            //            .Sum(i => i.Quantidade * i.ValorUnitario)
+            //    })
+            //    .ToList()
+            //    .Select(x => new VendasPeriodoViewModel
+            //    {
+            //        Periodo = $"{x.Year}-{x.Month:D2}",
+            //        TotalVendas = x.TotalVendas
+            //    })
+            //    .OrderBy(x => x.Periodo)
+            //    .ToList();
 
 
 
@@ -196,12 +233,16 @@ namespace Cliente.Application.Services
                             : ((produto.Atual - produto.Anterior)
                                 / produto.Anterior) * 100;
                 }
-            
+
 
             // CRESCIMENTO %
 
+            //var crescimento = anterior == 0
+            //    ? 100
+            //    : ((atual - anterior) / anterior) * 100;
+
             var crescimento = anterior == 0
-                ? 100
+                ? DashboardConstants.PercentualSemPeriodoAnterior
                 : ((atual - anterior) / anterior) * 100;
 
             // =============================
@@ -219,9 +260,15 @@ namespace Cliente.Application.Services
                     p.CreatedAt <= fimMesAnterior &&
                     p.IsActive);
 
+            //var crescimentoPedidos =
+            //    pedidosAnterior == 0
+            //    ? 100
+            //    : ((decimal)(pedidosAtual - pedidosAnterior)
+            //        / pedidosAnterior) * 100;
+
             var crescimentoPedidos =
                 pedidosAnterior == 0
-                ? 100
+                ? DashboardConstants.PercentualSemPeriodoAnterior
                 : ((decimal)(pedidosAtual - pedidosAnterior)
                     / pedidosAnterior) * 100;
 
@@ -258,9 +305,14 @@ namespace Cliente.Application.Services
                 ? 0
                 : anterior / pedidosAnterior;
 
+            //var crescimentoTicket =
+            //    ticketAnterior == 0
+            //    ? 100
+            //    : ((ticketAtual - ticketAnterior)
+            //        / ticketAnterior) * 100;
             var crescimentoTicket =
                 ticketAnterior == 0
-                ? 100
+                ? DashboardConstants.PercentualSemPeriodoAnterior
                 : ((ticketAtual - ticketAnterior)
                     / ticketAnterior) * 100;
 
@@ -318,63 +370,54 @@ namespace Cliente.Application.Services
 
             };
 
-            var comparativoVendedores = rankingVendedores
-                .Select(v => new ComparativoVendedorViewModel
-                {
-                    Vendedor = v.Vendedor,
+            //var comparativoVendedores = rankingVendedores
+            //    .Select(v => new ComparativoVendedorViewModel
+            //    {
+            //        Vendedor = v.Vendedor,
 
-                    Atual = _context.Pedidos
-                        .Where(p =>
-                            p.Vendedor.NomeVendedor == v.Vendedor &&
-                            p.CreatedAt >= inicioMesAtual &&
-                            p.IsActive)
-                        .SelectMany(p => p.Itens)
-                        .Sum(i => i.Quantidade * i.ValorUnitario),
+            //        Atual = _context.Pedidos
+            //            .Where(p =>
+            //                p.Vendedor.NomeVendedor == v.Vendedor &&
+            //                p.CreatedAt >= inicioMesAtual &&
+            //                p.IsActive)
+            //            .SelectMany(p => p.Itens)
+            //            .Sum(i => i.Quantidade * i.ValorUnitario),
 
-                    Anterior = _context.Pedidos
-                        .Where(p =>
-                            p.Vendedor.NomeVendedor == v.Vendedor &&
-                            p.CreatedAt >= inicioMesAnterior &&
-                            p.CreatedAt <= fimMesAnterior &&
-                            p.IsActive)
-                        .SelectMany(p => p.Itens)
-                        .Sum(i => i.Quantidade * i.ValorUnitario)
-                })
-                .ToList();
+            //        Anterior = _context.Pedidos
+            //            .Where(p =>
+            //                p.Vendedor.NomeVendedor == v.Vendedor &&
+            //                p.CreatedAt >= inicioMesAnterior &&
+            //                p.CreatedAt <= fimMesAnterior &&
+            //                p.IsActive)
+            //            .SelectMany(p => p.Itens)
+            //            .Sum(i => i.Quantidade * i.ValorUnitario)
+            //    })
+            //    .ToList();
 
-            foreach (var vendedor in comparativoVendedores)
-            {
-                vendedor.CrescimentoPercentual =
-                    vendedor.Anterior == 0
-                        ? 100
-                        : ((vendedor.Atual - vendedor.Anterior)
-                            / vendedor.Anterior) * 100;
-            }
+            //foreach (var vendedor in comparativoVendedores)
+            //{
+            //    vendedor.CrescimentoPercentual =
+            //        vendedor.Anterior == 0
+            //            ? 100
+            //            : ((vendedor.Atual - vendedor.Anterior)
+            //                / vendedor.Anterior) * 100;
+            //}
 
-            return ResultViewModel<DashboardViewModel>.Success(model);
+            //return ResultViewModel<DashboardViewModel>.Success(model);
 
             // =============================
             // MÉDIA PERIODO
             // =============================
 
-            var mediaPeriodo =
-                vendasPeriodo.Any()
-                    ? vendasPeriodo.Average(x => x.TotalVendas)
-                    : 0;
+        var mediaPeriodo =
+        vendasPeriodo.Any()
+            ? vendasPeriodo.Average(x => x.TotalVendas)
+            : 0;
 
-                        var ultimoPeriodo =
-                            vendasPeriodo.LastOrDefault()?.TotalVendas ?? 0;
+                var ultimoPeriodo =
+                    vendasPeriodo.LastOrDefault()?.TotalVendas ?? 0;
 
-                        var tendencias = new List<TendenciaViewModel>
-            {
-                new()
-                {
-                    Indicador = "Vendas",
-                    MediaPeriodo = mediaPeriodo,
-                    UltimoPeriodo = ultimoPeriodo,
-                    TendenciaAlta = ultimoPeriodo >= mediaPeriodo
-                }
-            };
+
 
         }
     }    

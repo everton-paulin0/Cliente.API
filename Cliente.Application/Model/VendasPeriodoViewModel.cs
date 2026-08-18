@@ -15,21 +15,5 @@ namespace Cliente.Application.Model
 
     }
 
-    var vendasPeriodo = _context.Pedidos
-    .Where(p => p.IsActive)
-    .AsEnumerable()
-    .GroupBy(p => new
-    {
-        p.CreatedAt.Year,
-        p.CreatedAt.Month
-    })
-    .Select(g => new VendasPeriodoViewModel
-    {
-        Periodo = $"{g.Key.Year}-{g.Key.Month:D2}",
-        TotalVendas = g
-            .SelectMany(p => p.Itens)
-            .Sum(i => i.Quantidade * i.ValorUnitario)
-    })
-    .OrderBy(x => x.Periodo)
-    .ToList();
-    }
+    
+}
